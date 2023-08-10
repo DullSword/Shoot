@@ -4,6 +4,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/HealthComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "Components/WeaponComponent.h"
 
 // Sets default values
 AShootCharacter::AShootCharacter()
@@ -16,6 +17,8 @@ AShootCharacter::AShootCharacter()
 	HealthTextComponent->SetupAttachment(GetRootComponent());
 
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
+
+	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("WeaponComponent"));
 }
 
 // Called when the game starts or when spawned
@@ -56,6 +59,9 @@ void AShootCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ACharacter::Jump);
 		PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Pressed, this, &AShootCharacter::Sprint);
 		PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, this, &AShootCharacter::StopSprint);
+
+		check(WeaponComponent);
+		PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Pressed, WeaponComponent, &UWeaponComponent::Fire);
 	}
 }
 

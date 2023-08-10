@@ -11,6 +11,7 @@ class UCharacterMovementComponent;
 class UHealthComponent;
 class UTextRenderComponent;
 class UAnimMontage;
+class UWeaponComponent;
 
 UCLASS()
 class SHOOT_API AShootCharacter : public ACharacter
@@ -69,4 +70,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UTextRenderComponent* HealthTextComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UWeaponComponent* WeaponComponent;
 };

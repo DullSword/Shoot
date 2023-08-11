@@ -5,6 +5,7 @@
 #include "Components/HealthComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "Components/WeaponComponent.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 AShootCharacter::AShootCharacter()
@@ -61,7 +62,8 @@ void AShootCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		PlayerInputComponent->BindAction("Sprint", EInputEvent::IE_Released, this, &AShootCharacter::StopSprint);
 
 		check(WeaponComponent);
-		PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Pressed, WeaponComponent, &UWeaponComponent::Fire);
+		PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Pressed, WeaponComponent, &UWeaponComponent::StartFire);
+		PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Released, WeaponComponent, &UWeaponComponent::StopFire);
 	}
 }
 
@@ -122,6 +124,10 @@ void AShootCharacter::OnDead()
 	CharacterMovementComponent->DisableMovement();
 	PlayAnimMontage(DeadMontage);
 	SetLifeSpan(LifeSpan);
+	if (auto CharacterCapsuleComponent = GetCapsuleComponent(); CharacterCapsuleComponent)
+	{
+		CharacterCapsuleComponent->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+	}
 
 	if (auto CharacterController = Cast<APlayerController>(Controller); CharacterController)
 	{

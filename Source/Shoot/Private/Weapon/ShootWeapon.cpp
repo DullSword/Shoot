@@ -1,7 +1,6 @@
 // Shoot Game. All Rights Reserved.
 
 #include "Weapon/ShootWeapon.h"
-#include "DrawDebugHelpers.h"
 #include "GameFramework/Character.h"
 
 // Sets default values
@@ -20,41 +19,17 @@ void AShootWeapon::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AShootWeapon::Fire()
+void AShootWeapon::StartFire()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Fire!"));
+}
 
-	MakeShoot();
+void AShootWeapon::StopFire()
+{
 }
 
 void AShootWeapon::MakeShoot()
 {
-	if (!GetWorld())
-	{
-		return;
-	}
-
-	FVector TraceStart;
-	FVector TraceEnd;
-	if (!GetTraceData(TraceStart, TraceEnd))
-	{
-		return;
-	}
-
-	FHitResult HitResult;
-	MakeHit(HitResult, TraceStart, TraceEnd);
-
-	if (HitResult.bBlockingHit)
-	{
-		DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), HitResult.ImpactPoint, FColor::Red, false, 3.f, 0, 2.f);
-		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.f, 24, FColor::Red, false, 5.f);
-
-		UE_LOG(LogTemp, Warning, TEXT("Bone name: %s"), *HitResult.BoneName.ToString());
-	}
-	else
-	{
-		DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), TraceEnd, FColor::Red, false, 3.f, 0, 2.f);
-	}
 }
 
 APlayerController* AShootWeapon::GetPlayerController() const
@@ -95,7 +70,7 @@ bool AShootWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const
 	return true;
 }
 
-void AShootWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd)
+void AShootWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart, const FVector& TraceEnd) const
 {
 	if (!GetWorld())
 	{
@@ -111,4 +86,14 @@ void AShootWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart, con
 FVector AShootWeapon::GetMuzzleWorldLocation() const
 {
 	return WeaponMesh->GetSocketLocation(MuzzleSocketName);
+}
+
+void AShootWeapon::MakeDamage(FHitResult& HitResult)
+{
+	const auto DamagedActor = HitResult.GetActor();
+	if (!DamagedActor)
+	{
+		return;
+	}
+	DamagedActor->TakeDamage(DamageAmount, FDamageEvent{}, GetPlayerController(), this);
 }

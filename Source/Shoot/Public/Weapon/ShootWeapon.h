@@ -43,7 +43,7 @@ protected:
 
 	APlayerController* GetPlayerController() const;
 
-	FVector GetMuzzleWorldLocation() const;
+	FTransform GetMuzzleTransform() const;
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Components")

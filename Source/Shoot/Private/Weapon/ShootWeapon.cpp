@@ -83,9 +83,9 @@ void AShootWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart, con
 	GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECollisionChannel::ECC_Visibility, CollisionQueryParams);
 }
 
-FVector AShootWeapon::GetMuzzleWorldLocation() const
+FTransform AShootWeapon::GetMuzzleTransform() const
 {
-	return WeaponMesh->GetSocketLocation(MuzzleSocketName);
+	return WeaponMesh->GetSocketTransform(MuzzleSocketName);
 }
 
 void AShootWeapon::MakeDamage(FHitResult& HitResult)

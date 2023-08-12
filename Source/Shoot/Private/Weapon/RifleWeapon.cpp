@@ -40,14 +40,14 @@ void ARifleWeapon::MakeShoot()
 	if (HitResult.bBlockingHit)
 	{
 		MakeDamage(HitResult);
-		DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), HitResult.ImpactPoint, FColor::Red, false, 3.f, 0, 2.f);
+		DrawDebugLine(GetWorld(), GetMuzzleTransform().GetLocation(), HitResult.ImpactPoint, FColor::Red, false, 3.f, 0, 2.f);
 		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.f, 24, FColor::Red, false, 5.f);
 
 		UE_LOG(LogTemp, Warning, TEXT("Bone name: %s"), *HitResult.BoneName.ToString());
 	}
 	else
 	{
-		DrawDebugLine(GetWorld(), GetMuzzleWorldLocation(), TraceEnd, FColor::Red, false, 3.f, 0, 2.f);
+		DrawDebugLine(GetWorld(), GetMuzzleTransform().GetLocation(), TraceEnd, FColor::Red, false, 3.f, 0, 2.f);
 	}
 }
 

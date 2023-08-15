@@ -30,6 +30,23 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Component")
 	UProjectileMovementComponent* MovementComponent;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	float LifeSeconds = 5.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	float DamageRadius = 200.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	float DamageAmount = 50.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	bool DoFullDamage = false;
+
 private:
 	FVector ShotDirection;
+
+	UFUNCTION()
+	void OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	AController* GetController() const;
 };

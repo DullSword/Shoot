@@ -28,11 +28,6 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float TraceMaxDistance = 1500.f;
 
-	UPROPERTY(EditAnywhere)
-	float DamageAmount = 10.f;
-
-	void MakeDamage(FHitResult& HitResult);
-
 	virtual void MakeShoot();
 
 	virtual bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const;

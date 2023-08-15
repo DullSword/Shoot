@@ -87,13 +87,3 @@ FTransform AShootWeapon::GetMuzzleTransform() const
 {
 	return WeaponMesh->GetSocketTransform(MuzzleSocketName);
 }
-
-void AShootWeapon::MakeDamage(FHitResult& HitResult)
-{
-	const auto DamagedActor = HitResult.GetActor();
-	if (!DamagedActor)
-	{
-		return;
-	}
-	DamagedActor->TakeDamage(DamageAmount, FDamageEvent{}, GetPlayerController(), this);
-}

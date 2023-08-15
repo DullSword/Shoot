@@ -19,11 +19,14 @@ public:
 	virtual void StopFire() override;
 
 protected:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	float TimeBetweenShoots = 0.2f;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	float BulletSpread = 1.5f;
+
+	UPROPERTY(EditDefaultsOnly)
+	float DamageAmount = 10.f;
 
 	virtual void MakeShoot() override;
 
@@ -31,4 +34,6 @@ protected:
 
 private:
 	FTimerHandle ShootTimer;
+
+	void MakeDamage(FHitResult& HitResult);
 };

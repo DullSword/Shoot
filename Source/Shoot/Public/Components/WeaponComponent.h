@@ -55,4 +55,8 @@ private:
 	void PlayAnimMontage(UAnimMontage* AnimMontage);
 	void InitAnimations();
 	void OnEquipFinished(USkeletalMeshComponent* MeshComponent);
+
+	bool EquipAnimInProcess = false;
+	bool CanFire() const;
+	bool CanEquip() const;
 };

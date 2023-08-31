@@ -17,6 +17,8 @@ AShootWeapon::AShootWeapon()
 void AShootWeapon::BeginPlay()
 {
 	Super::BeginPlay();
+
+	CurrentAmmo = DefaultAmmo;
 }
 
 void AShootWeapon::StartFire()
@@ -86,4 +88,43 @@ void AShootWeapon::MakeHit(FHitResult& HitResult, const FVector& TraceStart, con
 FTransform AShootWeapon::GetMuzzleTransform() const
 {
 	return WeaponMesh->GetSocketTransform(MuzzleSocketName);
+}
+
+void AShootWeapon::DecreaseAmmo()
+{
+	CurrentAmmo.Bullets--;
+	LogAmmo();
+
+	if (IsCurrentClipEmpty() && !IsTotalAmmoEmpty())
+	{
+		ChangeClip();
+	}
+}
+
+bool AShootWeapon::IsTotalAmmoEmpty() const
+{
+	return !CurrentAmmo.Infinite && IsCurrentClipEmpty() && CurrentAmmo.Clips == 0;
+}
+
+bool AShootWeapon::IsCurrentClipEmpty() const
+{
+	return CurrentAmmo.Bullets == 0;
+}
+
+void AShootWeapon::ChangeClip()
+{
+	CurrentAmmo.Bullets = DefaultAmmo.Bullets;
+
+	if (!CurrentAmmo.Infinite)
+	{
+		CurrentAmmo.Clips--;
+	}
+	UE_LOG(LogTemp, Display, TEXT("------ Change Clip ------"));
+}
+
+void AShootWeapon::LogAmmo()
+{
+	FString AmmoInfo = "Ammo: " + FString::FromInt(CurrentAmmo.Bullets) + "/";
+	AmmoInfo += CurrentAmmo.Infinite ? "Infinite" : FString::FromInt(CurrentAmmo.Clips);
+	UE_LOG(LogTemp, Display, TEXT("%s"), *AmmoInfo);
 }

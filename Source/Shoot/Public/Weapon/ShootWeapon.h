@@ -6,6 +6,21 @@
 #include "GameFramework/Actor.h"
 #include "ShootWeapon.generated.h"
 
+USTRUCT(BlueprintType)
+struct FAmmoData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	int32 Bullets;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon", meta = (EditCondition = "!Infinite"))
+	int32 Clips;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	bool Infinite;
+};
+
 UCLASS()
 class SHOOT_API AShootWeapon : public AActor
 {
@@ -40,7 +55,18 @@ protected:
 
 	FTransform GetMuzzleTransform() const;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	FAmmoData DefaultAmmo{ 15, 10, false };
+
+	void DecreaseAmmo();
+	bool IsTotalAmmoEmpty() const;
+	bool IsCurrentClipEmpty() const;
+	void ChangeClip();
+	void LogAmmo();
+
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USkeletalMeshComponent* WeaponMesh;
+
+	FAmmoData CurrentAmmo;
 };

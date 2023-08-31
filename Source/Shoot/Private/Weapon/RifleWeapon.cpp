@@ -22,6 +22,12 @@ void ARifleWeapon::MakeShoot()
 {
 	Super::MakeShoot();
 
+	if (IsTotalAmmoEmpty())
+	{
+		StopFire();
+		return;
+	}
+
 	if (!GetWorld())
 	{
 		return;
@@ -33,6 +39,8 @@ void ARifleWeapon::MakeShoot()
 	{
 		return;
 	}
+
+	DecreaseAmmo();
 
 	FHitResult HitResult;
 	MakeHit(HitResult, TraceStart, TraceEnd);

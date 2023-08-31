@@ -10,6 +10,11 @@ void ALauncherWeapon::StartFire()
 
 void ALauncherWeapon::MakeShoot()
 {
+	if (IsTotalAmmoEmpty())
+	{
+		return;
+	}
+
 	if (!GetWorld())
 	{
 		return;
@@ -20,6 +25,8 @@ void ALauncherWeapon::MakeShoot()
 	{
 		return;
 	}
+
+	DecreaseAmmo();
 
 	FHitResult HitResult;
 	MakeHit(HitResult, TraceStart, TraceEnd);

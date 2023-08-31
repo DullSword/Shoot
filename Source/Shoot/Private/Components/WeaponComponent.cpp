@@ -3,6 +3,7 @@
 #include "Components/WeaponComponent.h"
 #include "Weapon/ShootWeapon.h"
 #include "GameFramework/Character.h"
+#include "Animations/ShootFinishedAnimNotify.h"
 
 // Sets default values for this component's properties
 UWeaponComponent::UWeaponComponent()
@@ -20,32 +21,80 @@ void UWeaponComponent::BeginPlay()
 	Super::BeginPlay();
 
 	SpawnWeapon();
+
+	CurrentWeaponIndex = 0;
+	InitAnimations();
+	EquipWeapon(CurrentWeaponIndex);
+}
+
+void UWeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	CurrentWeapon = nullptr;
+
+	for (auto weapon : Weapons)
+	{
+		weapon->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		weapon->Destroy();
+	}
+
+	Weapons.Empty();
+
+	Super::EndPlay(EndPlayReason);
 }
 
 void UWeaponComponent::SpawnWeapon()
 {
 	ACharacter* Character = Cast<ACharacter>(GetOwner());
-	if (!Character)
+	if (!Character || !GetWorld())
 	{
 		return;
 	}
 
-	if (!GetWorld())
+	for (auto WeaponClass : WeaponClasses)
 	{
-		return;
+		auto Weapon = GetWorld()->SpawnActor<AShootWeapon>(WeaponClass);
+		if (!Weapon)
+		{
+			continue;
+		}
+
+		Weapon->SetOwner(Character);
+		Weapons.Add(Weapon);
+
+		AttachWeaponToSocket(Weapon, Character->GetMesh(), WeaponArmorySocketName);
 	}
+}
 
-	CurrentWeapon = GetWorld()->SpawnActor<AShootWeapon>(WeaponClass);
-
-	if (!CurrentWeapon)
+void UWeaponComponent::AttachWeaponToSocket(AShootWeapon* Weapon, USceneComponent* SceneComponent, const FName& SocketName)
+{
+	if (!Weapon || !SceneComponent)
 	{
 		return;
 	}
 
 	FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
-	CurrentWeapon->AttachToComponent(Character->GetMesh(), AttachmentRules, WeaponAttachSocketName);
+	Weapon->AttachToComponent(SceneComponent, AttachmentRules, SocketName);
+}
 
-	CurrentWeapon->SetOwner(Character);
+void UWeaponComponent::EquipWeapon(int32 WeaponIndex)
+{
+	ACharacter* Character = Cast<ACharacter>(GetOwner());
+
+	if (!Character)
+	{
+		return;
+	}
+
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->StopFire();
+		AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponArmorySocketName);
+	}
+
+	CurrentWeapon = Weapons[WeaponIndex];
+	AttachWeaponToSocket(CurrentWeapon, Character->GetMesh(), WeaponEquipSocketName);
+
+	PlayAnimMontage(EquipAnimMontage);
 }
 
 void UWeaponComponent::StartFire()
@@ -64,4 +113,56 @@ void UWeaponComponent::StopFire()
 		return;
 	}
 	CurrentWeapon->StopFire();
+}
+
+void UWeaponComponent::NextWeapon()
+{
+	CurrentWeaponIndex = (CurrentWeaponIndex + 1) % Weapons.Num();
+	EquipWeapon(CurrentWeaponIndex);
+}
+
+void UWeaponComponent::PlayAnimMontage(UAnimMontage* AnimMontage)
+{
+	ACharacter* Character = Cast<ACharacter>(GetOwner());
+
+	if (!Character)
+	{
+		return;
+	}
+
+	Character->PlayAnimMontage(AnimMontage);
+}
+
+void UWeaponComponent::InitAnimations()
+{
+	if (!EquipAnimMontage)
+	{
+		return;
+	}
+
+	const auto NotifyEvents = EquipAnimMontage->Notifies;
+	for (const auto& NotifyEvent : NotifyEvents)
+	{
+		auto EquipFinishedNotify = Cast<UShootFinishedAnimNotify>(NotifyEvent.Notify);
+		if (EquipFinishedNotify)
+		{
+			EquipFinishedNotify->OnNotified.AddUObject(this, &UWeaponComponent::OnEquipFinished);
+			break;
+		}
+	}
+}
+
+void UWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComponent)
+{
+	ACharacter* Character = Cast<ACharacter>(GetOwner());
+
+	if (!Character)
+	{
+		return;
+	}
+
+	if (Character->GetMesh() == MeshComponent)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("on equip finished"));
+	}
 }

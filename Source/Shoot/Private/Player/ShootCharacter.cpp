@@ -64,6 +64,7 @@ void AShootCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		check(WeaponComponent);
 		PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Pressed, WeaponComponent, &UWeaponComponent::StartFire);
 		PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Released, WeaponComponent, &UWeaponComponent::StopFire);
+		PlayerInputComponent->BindAction("NextWeapon", EInputEvent::IE_Pressed, WeaponComponent, &UWeaponComponent::NextWeapon);
 	}
 }
 
@@ -133,6 +134,8 @@ void AShootCharacter::OnDead()
 	{
 		CharacterController->ChangeState(NAME_Spectating);
 	}
+
+	WeaponComponent->StopFire();
 }
 
 void AShootCharacter::TakeFallingDamage(const FHitResult& Hit)

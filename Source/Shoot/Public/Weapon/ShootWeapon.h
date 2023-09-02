@@ -4,24 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "ShootCoreTypes.h"
 #include "ShootWeapon.generated.h"
-
-USTRUCT(BlueprintType)
-struct FAmmoData
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-	int32 Bullets;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon", meta = (EditCondition = "!Infinite"))
-	int32 Clips;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-	bool Infinite;
-};
-
-DECLARE_MULTICAST_DELEGATE(FOnClipEmptySignature)
 
 UCLASS()
 class SHOOT_API AShootWeapon : public AActor

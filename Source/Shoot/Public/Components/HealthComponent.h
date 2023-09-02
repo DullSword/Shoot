@@ -4,12 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "ShootCoreTypes.h"
 #include "HealthComponent.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(FOnDead)
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChange, float)
-
-	UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class SHOOT_API UHealthComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -24,8 +22,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool IsDead() const { return FMath::IsNearlyZero(Health); }
 
-	FOnDead			OnDead;
-	FOnHealthChange OnHealthChange;
+	FOnDeadSignature OnDead;
+	FOnHealthChangeSignature OnHealthChange;
 
 protected:
 	// Called when the game starts

@@ -4,21 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "ShootCoreTypes.h"
 #include "WeaponComponent.generated.h"
 
 class AShootWeapon;
-
-USTRUCT(BlueprintType)
-struct FWeaponData
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
-	TSubclassOf<AShootWeapon> WeaponClass;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
-	UAnimMontage* ReloadAnimMontage;
-};
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class SHOOT_API UWeaponComponent : public UActorComponent
@@ -82,25 +71,4 @@ private:
 
 	void OnClipEmpty();
 	void ChangeClip();
-
-	template <typename T>
-	T* FindFirstNotifyByClass(UAnimSequenceBase* Animation)
-	{
-		if (!Animation)
-		{
-			return nullptr;
-		}
-
-		const auto& NotifyEvents = Animation->Notifies;
-		for (const auto& NotifyEvent : NotifyEvents)
-		{
-			auto Notify = Cast<T>(NotifyEvent.Notify);
-			if (Notify)
-			{
-				return Notify;
-			}
-		}
-
-		return nullptr;
-	}
 };

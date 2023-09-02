@@ -8,6 +8,18 @@
 
 class AShootWeapon;
 
+USTRUCT(BlueprintType)
+struct FWeaponData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+	TSubclassOf<AShootWeapon> WeaponClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+	UAnimMontage* ReloadAnimMontage;
+};
+
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class SHOOT_API UWeaponComponent : public UActorComponent
 {
@@ -21,6 +33,7 @@ public:
 	void StopFire();
 
 	void NextWeapon();
+	void Reload();
 
 protected:
 	// Called when the game starts
@@ -28,7 +41,7 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-	TArray<TSubclassOf<AShootWeapon>> WeaponClasses;
+	TArray<FWeaponData> WeaponDatas;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	FName WeaponEquipSocketName = "WeaponSocket";
@@ -47,6 +60,9 @@ private:
 	TArray<AShootWeapon*> Weapons;
 
 	int32 CurrentWeaponIndex = 0;
+
+	UPROPERTY()
+	UAnimMontage* CurrentReloadAnimMontage = nullptr;
 
 	void SpawnWeapon();
 	void AttachWeaponToSocket(AShootWeapon* Weapon, USceneComponent* SceneComponent, const FName& SocketName);

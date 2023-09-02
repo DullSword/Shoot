@@ -70,9 +70,34 @@ private:
 
 	void PlayAnimMontage(UAnimMontage* AnimMontage);
 	void InitAnimations();
-	void OnEquipFinished(USkeletalMeshComponent* MeshComponent);
 
 	bool EquipAnimInProcess = false;
 	bool CanFire() const;
 	bool CanEquip() const;
+	void OnEquipFinished(USkeletalMeshComponent* MeshComponent);
+
+	bool ReloadAnimInProcess = false;
+	bool CanReload() const;
+	void OnReloadFinished(USkeletalMeshComponent* MeshComponent);
+
+	template <typename T>
+	T* FindFirstNotifyByClass(UAnimSequenceBase* Animation)
+	{
+		if (!Animation)
+		{
+			return nullptr;
+		}
+
+		const auto& NotifyEvents = Animation->Notifies;
+		for (const auto& NotifyEvent : NotifyEvents)
+		{
+			auto Notify = Cast<T>(NotifyEvent.Notify);
+			if (Notify)
+			{
+				return Notify;
+			}
+		}
+
+		return nullptr;
+	}
 };

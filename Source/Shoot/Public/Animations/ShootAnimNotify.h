@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimNotifies/AnimNotify.h"
-#include "ShootFinishedAnimNotify.generated.h"
+#include "ShootAnimNotify.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnNotifiedSignature, USkeletalMeshComponent*)
 
@@ -12,7 +12,7 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnNotifiedSignature, USkeletalMeshComponent
  *
  */
 UCLASS()
-class SHOOT_API UShootFinishedAnimNotify : public UAnimNotify
+class SHOOT_API UShootAnimNotify : public UAnimNotify
 {
 	GENERATED_BODY()
 

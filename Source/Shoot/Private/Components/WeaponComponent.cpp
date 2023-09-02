@@ -3,7 +3,8 @@
 #include "Components/WeaponComponent.h"
 #include "Weapon/ShootWeapon.h"
 #include "GameFramework/Character.h"
-#include "Animations/ShootFinishedAnimNotify.h"
+#include "Animations/EquipFinishedAnimNotify.h"
+#include "Animations/ReloadFinishedAnimNotify.h"
 
 // Sets default values for this component's properties
 UWeaponComponent::UWeaponComponent()
@@ -139,6 +140,11 @@ void UWeaponComponent::NextWeapon()
 
 void UWeaponComponent::Reload()
 {
+	if (!CanReload())
+	{
+		return;
+	}
+	ReloadAnimInProcess = true;
 	PlayAnimMontage(CurrentReloadAnimMontage);
 }
 
@@ -156,21 +162,31 @@ void UWeaponComponent::PlayAnimMontage(UAnimMontage* AnimMontage)
 
 void UWeaponComponent::InitAnimations()
 {
-	if (!EquipAnimMontage)
+	const auto EquipFinishedNotify = FindFirstNotifyByClass<UEquipFinishedAnimNotify>(EquipAnimMontage);
+	if (EquipFinishedNotify)
 	{
-		return;
+		EquipFinishedNotify->OnNotified.AddUObject(this, &UWeaponComponent::OnEquipFinished);
 	}
 
-	const auto NotifyEvents = EquipAnimMontage->Notifies;
-	for (const auto& NotifyEvent : NotifyEvents)
+	for (const auto& WeaponData : WeaponDatas)
 	{
-		auto EquipFinishedNotify = Cast<UShootFinishedAnimNotify>(NotifyEvent.Notify);
-		if (EquipFinishedNotify)
+		const auto ReloadFinishedNotify = FindFirstNotifyByClass<UReloadFinishedAnimNotify>(WeaponData.ReloadAnimMontage);
+		if (!ReloadFinishedNotify)
 		{
-			EquipFinishedNotify->OnNotified.AddUObject(this, &UWeaponComponent::OnEquipFinished);
-			break;
+			continue;
 		}
+		ReloadFinishedNotify->OnNotified.AddUObject(this, &UWeaponComponent::OnReloadFinished);
 	}
+}
+
+bool UWeaponComponent::CanFire() const
+{
+	return CurrentWeapon && !EquipAnimInProcess && !ReloadAnimInProcess;
+}
+
+bool UWeaponComponent::CanEquip() const
+{
+	return !EquipAnimInProcess && !ReloadAnimInProcess;
 }
 
 void UWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComponent)
@@ -183,15 +199,21 @@ void UWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComponent)
 	}
 
 	EquipAnimInProcess = false;
-	UE_LOG(LogTemp, Warning, TEXT("on equip finished"));
 }
 
-bool UWeaponComponent::CanFire() const
+bool UWeaponComponent::CanReload() const
 {
-	return CurrentWeapon && !EquipAnimInProcess;
+	return CurrentWeapon && !ReloadAnimInProcess && !EquipAnimInProcess;
 }
 
-bool UWeaponComponent::CanEquip() const
+void UWeaponComponent::OnReloadFinished(USkeletalMeshComponent* MeshComponent)
 {
-	return !EquipAnimInProcess;
+	ACharacter* Character = Cast<ACharacter>(GetOwner());
+
+	if (!Character || Character->GetMesh() != MeshComponent)
+	{
+		return;
+	}
+
+	ReloadAnimInProcess = false;
 }

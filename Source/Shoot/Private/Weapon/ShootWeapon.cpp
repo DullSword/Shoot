@@ -92,12 +92,19 @@ FTransform AShootWeapon::GetMuzzleTransform() const
 
 void AShootWeapon::DecreaseAmmo()
 {
+	if (CurrentAmmo.Bullets == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Clip is empty"));
+		return;
+	}
+
 	CurrentAmmo.Bullets--;
 	LogAmmo();
 
 	if (IsCurrentClipEmpty() && !IsTotalAmmoEmpty())
 	{
-		ChangeClip();
+		StopFire();
+		OnClipEmpty.Broadcast();
 	}
 }
 
@@ -113,12 +120,16 @@ bool AShootWeapon::IsCurrentClipEmpty() const
 
 void AShootWeapon::ChangeClip()
 {
-	CurrentAmmo.Bullets = DefaultAmmo.Bullets;
-
 	if (!CurrentAmmo.Infinite)
 	{
+		if (CurrentAmmo.Clips == 0)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("No more clips"));
+			return;
+		}
 		CurrentAmmo.Clips--;
 	}
+	CurrentAmmo.Bullets = DefaultAmmo.Bullets;
 	UE_LOG(LogTemp, Display, TEXT("------ Change Clip ------"));
 }
 
@@ -127,4 +138,9 @@ void AShootWeapon::LogAmmo()
 	FString AmmoInfo = "Ammo: " + FString::FromInt(CurrentAmmo.Bullets) + "/";
 	AmmoInfo += CurrentAmmo.Infinite ? "Infinite" : FString::FromInt(CurrentAmmo.Clips);
 	UE_LOG(LogTemp, Display, TEXT("%s"), *AmmoInfo);
+}
+
+bool AShootWeapon::CanReload() const
+{
+	return CurrentAmmo.Bullets < DefaultAmmo.Bullets && (CurrentAmmo.Infinite || CurrentAmmo.Clips > 0);
 }

@@ -21,6 +21,8 @@ struct FAmmoData
 	bool Infinite;
 };
 
+DECLARE_MULTICAST_DELEGATE(FOnClipEmptySignature)
+
 UCLASS()
 class SHOOT_API AShootWeapon : public AActor
 {
@@ -32,6 +34,11 @@ public:
 
 	virtual void StartFire();
 	virtual void StopFire();
+
+	bool CanReload() const;
+	void ChangeClip();
+
+	FOnClipEmptySignature OnClipEmpty;
 
 protected:
 	// Called when the game starts or when spawned
@@ -61,7 +68,6 @@ protected:
 	void DecreaseAmmo();
 	bool IsTotalAmmoEmpty() const;
 	bool IsCurrentClipEmpty() const;
-	void ChangeClip();
 	void LogAmmo();
 
 private:

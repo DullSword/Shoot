@@ -80,6 +80,9 @@ private:
 	bool CanReload() const;
 	void OnReloadFinished(USkeletalMeshComponent* MeshComponent);
 
+	void OnClipEmpty();
+	void ChangeClip();
+
 	template <typename T>
 	T* FindFirstNotifyByClass(UAnimSequenceBase* Animation)
 	{

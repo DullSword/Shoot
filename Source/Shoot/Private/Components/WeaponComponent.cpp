@@ -60,6 +60,7 @@ void UWeaponComponent::SpawnWeapon()
 		}
 
 		Weapon->SetOwner(Character);
+		Weapon->OnClipEmpty.AddUObject(this, &UWeaponComponent::OnClipEmpty);
 		Weapons.Add(Weapon);
 
 		AttachWeaponToSocket(Weapon, Character->GetMesh(), WeaponArmorySocketName);
@@ -138,16 +139,6 @@ void UWeaponComponent::NextWeapon()
 	EquipWeapon(CurrentWeaponIndex);
 }
 
-void UWeaponComponent::Reload()
-{
-	if (!CanReload())
-	{
-		return;
-	}
-	ReloadAnimInProcess = true;
-	PlayAnimMontage(CurrentReloadAnimMontage);
-}
-
 void UWeaponComponent::PlayAnimMontage(UAnimMontage* AnimMontage)
 {
 	ACharacter* Character = Cast<ACharacter>(GetOwner());
@@ -201,9 +192,14 @@ void UWeaponComponent::OnEquipFinished(USkeletalMeshComponent* MeshComponent)
 	EquipAnimInProcess = false;
 }
 
+void UWeaponComponent::Reload()
+{
+	ChangeClip();
+}
+
 bool UWeaponComponent::CanReload() const
 {
-	return CurrentWeapon && !ReloadAnimInProcess && !EquipAnimInProcess;
+	return CurrentWeapon && !EquipAnimInProcess && !ReloadAnimInProcess && CurrentWeapon->CanReload();
 }
 
 void UWeaponComponent::OnReloadFinished(USkeletalMeshComponent* MeshComponent)
@@ -216,4 +212,23 @@ void UWeaponComponent::OnReloadFinished(USkeletalMeshComponent* MeshComponent)
 	}
 
 	ReloadAnimInProcess = false;
+}
+
+void UWeaponComponent::OnClipEmpty()
+{
+	ChangeClip();
+}
+
+void UWeaponComponent::ChangeClip()
+{
+	if (!CanReload())
+	{
+		return;
+	}
+
+	CurrentWeapon->StopFire();
+	CurrentWeapon->ChangeClip();
+
+	ReloadAnimInProcess = true;
+	PlayAnimMontage(CurrentReloadAnimMontage);
 }

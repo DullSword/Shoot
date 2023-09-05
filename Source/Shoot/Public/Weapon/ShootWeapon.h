@@ -23,6 +23,7 @@ public:
 	void ChangeClip();
 
 	FWeaponUIData GetUIData() const { return UIData; }
+	FAmmoData	  GetAmmoData() const { return CurrentAmmo; }
 
 	FOnClipEmptySignature OnClipEmpty;
 

@@ -7,6 +7,8 @@
 #include "ShootCoreTypes.h"
 #include "ShootPlayerHUDWidget.generated.h"
 
+class UWeaponComponent;
+
 /**
  *
  */
@@ -20,5 +22,11 @@ public:
 	float GetHealthPercent() const;
 
 	UFUNCTION(BlueprintCallable)
-	bool GetWeaponUIData(FWeaponUIData& UIData) const;
+	bool GetCurrentWeaponUIData(FWeaponUIData& UIData) const;
+
+	UFUNCTION(BlueprintCallable)
+	bool GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const;
+
+private:
+	UWeaponComponent* GetWeaponComponent() const;
 };

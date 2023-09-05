@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "ShootCoreTypes.h"
 #include "ShootPlayerHUDWidget.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class SHOOT_API UShootPlayerHUDWidget : public UUserWidget
@@ -17,5 +18,7 @@ class SHOOT_API UShootPlayerHUDWidget : public UUserWidget
 public:
 	UFUNCTION(BlueprintCallable)
 	float GetHealthPercent() const;
-	
+
+	UFUNCTION(BlueprintCallable)
+	bool GetWeaponUIData(FWeaponUIData& UIData) const;
 };

@@ -3,6 +3,7 @@
 
 #include "UI/ShootPlayerHUDWidget.h"
 #include "components/HealthComponent.h"
+#include "Components/WeaponComponent.h"
 
 float UShootPlayerHUDWidget::GetHealthPercent() const {
 	const auto Pawn = GetOwningPlayerPawn();
@@ -19,4 +20,22 @@ float UShootPlayerHUDWidget::GetHealthPercent() const {
 	}
 
 	return HealthComponent->GetHealthPercent();
+}
+
+bool UShootPlayerHUDWidget::GetWeaponUIData(FWeaponUIData& UIData) const
+{
+	const auto Pawn = GetOwningPlayerPawn();
+	if (!Pawn)
+	{
+		return false;
+	}
+
+	const auto Component = Pawn->GetComponentByClass(UWeaponComponent::StaticClass());
+	const auto WeaponComponent = Cast<UWeaponComponent>(Component);
+	if (!WeaponComponent)
+	{
+		return false;
+	}
+
+	return WeaponComponent->GetWeaponUIData(UIData);
 }

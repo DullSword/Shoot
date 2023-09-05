@@ -22,6 +22,8 @@ public:
 	bool CanReload() const;
 	void ChangeClip();
 
+	FWeaponUIData GetUIData() const { return UIData; }
+
 	FOnClipEmptySignature OnClipEmpty;
 
 protected:
@@ -53,6 +55,9 @@ protected:
 	bool IsTotalAmmoEmpty() const;
 	bool IsCurrentClipEmpty() const;
 	void LogAmmo();
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	FWeaponUIData UIData;
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Components")

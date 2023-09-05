@@ -7,6 +7,7 @@
 #include "ShootCoreTypes.h"
 #include "ShootPlayerHUDWidget.generated.h"
 
+class UHealthComponent;
 class UWeaponComponent;
 
 /**
@@ -27,6 +28,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const;
 
+	UFUNCTION(BlueprintCallable)
+	bool IsPlayerAlive() const;
+
+	UFUNCTION(BlueprintCallable)
+	bool IsPlayerSpectating() const;
+
 private:
+	UHealthComponent* GetHealthComponent() const;
 	UWeaponComponent* GetWeaponComponent() const;
 };

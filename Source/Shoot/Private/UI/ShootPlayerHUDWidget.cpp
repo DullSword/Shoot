@@ -6,14 +6,7 @@
 #include "Components/WeaponComponent.h"
 
 float UShootPlayerHUDWidget::GetHealthPercent() const {
-	const auto Pawn = GetOwningPlayerPawn();
-	if (!Pawn)
-	{
-		return 0.f;
-	}
-
-	const auto Component = Pawn->GetComponentByClass(UHealthComponent::StaticClass());
-	const auto HealthComponent = Cast<UHealthComponent>(Component);
+	const auto HealthComponent = GetHealthComponent();
 	if (!HealthComponent)
 	{
 		return 0.f;
@@ -42,6 +35,30 @@ bool UShootPlayerHUDWidget::GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const
 	}
 
 	return WeaponComponent->GetCurrentWeaponAmmoData(AmmoData);
+}
+
+bool UShootPlayerHUDWidget::IsPlayerAlive() const
+{
+	const auto HealthComponent = GetHealthComponent();
+	return HealthComponent && !HealthComponent->IsDead();
+}
+
+bool UShootPlayerHUDWidget::IsPlayerSpectating() const
+{
+	const auto Controller = GetOwningPlayer();
+	return Controller && Controller->GetStateName() == NAME_Spectating;
+}
+
+UHealthComponent* UShootPlayerHUDWidget::GetHealthComponent() const
+{
+	const auto Pawn = GetOwningPlayerPawn();
+	if (!Pawn)
+	{
+		return nullptr;
+	}
+
+	const auto Component = Pawn->GetComponentByClass(UHealthComponent::StaticClass());
+	return Cast<UHealthComponent>(Component);
 }
 
 UWeaponComponent* UShootPlayerHUDWidget::GetWeaponComponent() const

@@ -7,9 +7,6 @@
 #include "ShootCoreTypes.h"
 #include "ShootPlayerHUDWidget.generated.h"
 
-class UHealthComponent;
-class UWeaponComponent;
-
 /**
  *
  */
@@ -33,8 +30,4 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool IsPlayerSpectating() const;
-
-private:
-	UHealthComponent* GetHealthComponent() const;
-	UWeaponComponent* GetWeaponComponent() const;
 };

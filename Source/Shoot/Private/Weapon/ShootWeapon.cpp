@@ -103,7 +103,6 @@ void AShootWeapon::DecreaseAmmo()
 	}
 
 	CurrentAmmo.Bullets--;
-	LogAmmo();
 
 	if (IsCurrentClipEmpty() && !IsTotalAmmoEmpty())
 	{

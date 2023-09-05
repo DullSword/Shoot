@@ -4,9 +4,10 @@
 #include "UI/ShootPlayerHUDWidget.h"
 #include "components/HealthComponent.h"
 #include "Components/WeaponComponent.h"
+#include "ShootUtils.h"
 
 float UShootPlayerHUDWidget::GetHealthPercent() const {
-	const auto HealthComponent = GetHealthComponent();
+	const auto HealthComponent = ShootUtils::GetShootPlayerComponent<UHealthComponent>(GetOwningPlayerPawn());
 	if (!HealthComponent)
 	{
 		return 0.f;
@@ -17,7 +18,7 @@ float UShootPlayerHUDWidget::GetHealthPercent() const {
 
 bool UShootPlayerHUDWidget::GetCurrentWeaponUIData(FWeaponUIData& UIData) const
 {
-	const auto WeaponComponent = GetWeaponComponent();
+	const auto WeaponComponent = ShootUtils::GetShootPlayerComponent<UWeaponComponent>(GetOwningPlayerPawn());
 	if (!WeaponComponent)
 	{
 		return false;
@@ -28,7 +29,7 @@ bool UShootPlayerHUDWidget::GetCurrentWeaponUIData(FWeaponUIData& UIData) const
 
 bool UShootPlayerHUDWidget::GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const
 {
-	const auto WeaponComponent = GetWeaponComponent();
+	const auto WeaponComponent = ShootUtils::GetShootPlayerComponent<UWeaponComponent>(GetOwningPlayerPawn());
 	if (!WeaponComponent)
 	{
 		return false;
@@ -39,7 +40,7 @@ bool UShootPlayerHUDWidget::GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const
 
 bool UShootPlayerHUDWidget::IsPlayerAlive() const
 {
-	const auto HealthComponent = GetHealthComponent();
+	const auto HealthComponent = ShootUtils::GetShootPlayerComponent<UHealthComponent>(GetOwningPlayerPawn());
 	return HealthComponent && !HealthComponent->IsDead();
 }
 
@@ -47,28 +48,4 @@ bool UShootPlayerHUDWidget::IsPlayerSpectating() const
 {
 	const auto Controller = GetOwningPlayer();
 	return Controller && Controller->GetStateName() == NAME_Spectating;
-}
-
-UHealthComponent* UShootPlayerHUDWidget::GetHealthComponent() const
-{
-	const auto Pawn = GetOwningPlayerPawn();
-	if (!Pawn)
-	{
-		return nullptr;
-	}
-
-	const auto Component = Pawn->GetComponentByClass(UHealthComponent::StaticClass());
-	return Cast<UHealthComponent>(Component);
-}
-
-UWeaponComponent* UShootPlayerHUDWidget::GetWeaponComponent() const
-{
-	const auto Pawn = GetOwningPlayerPawn();
-	if (!Pawn)
-	{
-		return nullptr;
-	}
-
-	const auto Component = Pawn->GetComponentByClass(UWeaponComponent::StaticClass());
-	return Cast<UWeaponComponent>(Component);
 }

@@ -25,6 +25,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool IsDead() const { return FMath::IsNearlyZero(Health); }
 
+	bool IsHealthFull() const { return FMath::IsNearlyEqual(Health, MaxHealth); }
+
+	bool TryToAddHealth(float HealingAmount);
+
 	FOnDeadSignature OnDead;
 	FOnHealthChangeSignature OnHealthChange;
 

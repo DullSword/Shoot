@@ -67,8 +67,19 @@ void UHealthComponent::Heal()
 {
 	SetHealth(Health + HealAmount);
 
-	if (auto World = GetWorld(); World && FMath::IsNearlyEqual(Health, MaxHealth))
+	if (auto World = GetWorld(); World && IsHealthFull())
 	{
 		World->GetTimerManager().ClearTimer(HealTimer);
 	}
+}
+
+bool UHealthComponent::TryToAddHealth(float HealingAmount)
+{
+	if (IsDead() || IsHealthFull())
+	{
+		return false;
+	}
+
+	SetHealth(Health + HealingAmount);
+	return true;
 }

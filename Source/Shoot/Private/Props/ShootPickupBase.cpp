@@ -32,6 +32,15 @@ void AShootPickupBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	AddActorLocalRotation(FRotator(0.0f, RotationYaw, 0.0f));
+
+	for (const auto OverlapPawn : OverlappingPawns)
+	{
+		if (GivePickupTo(OverlapPawn))
+		{
+			PickupWasTaken();
+			break;
+		}
+	}
 }
 
 void AShootPickupBase::NotifyActorBeginOverlap(AActor* OtherActor)
@@ -39,9 +48,27 @@ void AShootPickupBase::NotifyActorBeginOverlap(AActor* OtherActor)
 	Super::NotifyActorBeginOverlap(OtherActor);
 
 	const auto Pawn = Cast<APawn>(OtherActor);
-	if (Pawn && GivePickupTo(Pawn))
+	if (Pawn)
 	{
-		PickupWasTaken();
+		if (GivePickupTo(Pawn))
+		{
+			PickupWasTaken();
+		}
+		else
+		{
+			OverlappingPawns.Add(Pawn);
+		}
+	}
+}
+
+void AShootPickupBase::NotifyActorEndOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorEndOverlap(OtherActor);
+
+	const auto Pawn = Cast<APawn>(OtherActor);
+	if (Pawn)
+	{
+		OverlappingPawns.Remove(Pawn);
 	}
 }
 
@@ -66,11 +93,19 @@ void AShootPickupBase::Respawn()
 {
 	GenerateRotationYaw();
 
-	CollisionComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 	if (GetRootComponent())
 	{
 		GetRootComponent()->SetVisibility(true, true);
 	}
+
+	FTimerHandle ResumeCollisionResponseTimerHandle;
+	GetWorldTimerManager().SetTimer(
+		ResumeCollisionResponseTimerHandle,
+		[this]() {
+			CollisionComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+		},
+		.3f,
+		false);
 }
 
 void AShootPickupBase::GenerateRotationYaw()

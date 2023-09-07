@@ -29,9 +29,13 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
 
 private:
 	USphereComponent* CollisionComponent;
+
+	UPROPERTY()
+	TArray<APawn*> OverlappingPawns;
 
 	virtual bool GivePickupTo(APawn* PlayerPawn);
 

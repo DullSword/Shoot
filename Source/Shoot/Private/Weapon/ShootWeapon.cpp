@@ -160,7 +160,7 @@ bool AShootWeapon::TryToAddAmmo(int32 BulletAmount)
 	else
 	{
 		const int32 OverflowBullets = CurrentAmmo.Bullets + BulletAmount - DefaultAmmo.Bullets;
-		CurrentAmmo.Clips += OverflowBullets;
+		CurrentAmmo.Clips = FMath::Clamp(CurrentAmmo.Clips + OverflowBullets, 0, DefaultAmmo.Clips);
 
 		CurrentAmmo.Bullets = DefaultAmmo.Bullets;
 	}

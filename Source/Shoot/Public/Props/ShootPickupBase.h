@@ -35,6 +35,10 @@ private:
 
 	virtual bool GivePickupTo(APawn* PlayerPawn);
 
-	void PickupWasTaken() const;
-	void Respawn() const;
+	void PickupWasTaken();
+	void Respawn();
+
+	float RotationYaw = 0.0f;
+
+	void GenerateRotationYaw();
 };

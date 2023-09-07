@@ -27,6 +27,8 @@ public:
 	bool GetCurrentWeaponUIData(FWeaponUIData& UIData) const;
 	bool GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const;
 
+	bool TryToAddAmmo(TSubclassOf<AShootWeapon> WeaponType, int32 BulletAmount);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

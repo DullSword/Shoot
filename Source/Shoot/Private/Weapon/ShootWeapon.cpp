@@ -21,7 +21,7 @@ void AShootWeapon::BeginPlay()
 	check(WeaponMesh);
 	checkf(DefaultAmmo.Bullets > 0, TEXT("Bullets count couldn't be less or equal zero"));
 	checkf(DefaultAmmo.Clips > 0, TEXT("Clips count couldn't be less or equal zero"));
-	
+
 	CurrentAmmo = DefaultAmmo;
 }
 
@@ -121,8 +121,15 @@ bool AShootWeapon::IsCurrentClipEmpty() const
 	return CurrentAmmo.Bullets == 0;
 }
 
+bool AShootWeapon::IsAmmoFull() const
+{
+	return CurrentAmmo.Bullets == DefaultAmmo.Bullets && CurrentAmmo.Clips == DefaultAmmo.Clips;
+}
+
 void AShootWeapon::ChangeClip()
 {
+	int32 amount = DefaultAmmo.Bullets;
+
 	if (!CurrentAmmo.Infinite)
 	{
 		if (CurrentAmmo.Clips == 0)
@@ -130,10 +137,34 @@ void AShootWeapon::ChangeClip()
 			UE_LOG(LogTemp, Warning, TEXT("No more clips"));
 			return;
 		}
-		CurrentAmmo.Clips--;
+		const int32 SpendedBullets = DefaultAmmo.Bullets - CurrentAmmo.Bullets;
+		const int32 ReplacedBullets = FMath::Min(SpendedBullets, CurrentAmmo.Clips);
+		CurrentAmmo.Clips -= ReplacedBullets;
+		amount = CurrentAmmo.Bullets + ReplacedBullets;
 	}
-	CurrentAmmo.Bullets = DefaultAmmo.Bullets;
+	CurrentAmmo.Bullets = amount;
 	UE_LOG(LogTemp, Display, TEXT("------ Change Clip ------"));
+}
+
+bool AShootWeapon::TryToAddAmmo(int32 BulletAmount)
+{
+	if (CurrentAmmo.Infinite || IsAmmoFull())
+	{
+		return false;
+	}
+
+	if (CurrentAmmo.Bullets + BulletAmount < DefaultAmmo.Bullets)
+	{
+		CurrentAmmo.Bullets += BulletAmount;
+	}
+	else
+	{
+		const int32 OverflowBullets = CurrentAmmo.Bullets + BulletAmount - DefaultAmmo.Bullets;
+		CurrentAmmo.Clips += OverflowBullets;
+
+		CurrentAmmo.Bullets = DefaultAmmo.Bullets;
+	}
+	return true;
 }
 
 void AShootWeapon::LogAmmo()

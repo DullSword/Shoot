@@ -22,6 +22,8 @@ public:
 	bool CanReload() const;
 	void ChangeClip();
 
+	bool TryToAddAmmo(int32 BulletAmount);
+
 	FWeaponUIData GetUIData() const { return UIData; }
 	FAmmoData	  GetAmmoData() const { return CurrentAmmo; }
 
@@ -55,6 +57,7 @@ protected:
 	void DecreaseAmmo();
 	bool IsTotalAmmoEmpty() const;
 	bool IsCurrentClipEmpty() const;
+	bool IsAmmoFull() const;
 	void LogAmmo();
 
 	UPROPERTY(EditDefaultsOnly, Category = "UI")

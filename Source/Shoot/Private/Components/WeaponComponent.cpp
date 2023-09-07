@@ -265,3 +265,15 @@ bool UWeaponComponent::GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const
 	AmmoData = CurrentWeapon->GetAmmoData();
 	return true;
 }
+
+bool UWeaponComponent::TryToAddAmmo(TSubclassOf<AShootWeapon> WeaponType, int32 BulletAmount)
+{
+	for (const auto& Weapon : Weapons)
+	{
+		if (Weapon && Weapon->IsA(WeaponType))
+		{
+			return Weapon->TryToAddAmmo(BulletAmount);
+		}
+	}
+	return false;
+}

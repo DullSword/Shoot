@@ -12,8 +12,8 @@ UCLASS()
 class SHOOT_API AShootPickupBase : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AShootPickupBase();
 
@@ -21,7 +21,10 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+	UPROPERTY(EditAnywhere, Category = "Pickup")
+	float RespawnTime = 5.f;
+
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -29,4 +32,9 @@ public:
 
 private:
 	USphereComponent* CollisionComponent;
+
+	virtual bool GivePickupTo(APawn* PlayerPawn);
+
+	void PickupWasTaken() const;
+	void Respawn() const;
 };

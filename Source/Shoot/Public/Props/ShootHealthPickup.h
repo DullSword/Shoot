@@ -13,5 +13,7 @@ UCLASS()
 class SHOOT_API AShootHealthPickup : public AShootPickupBase
 {
 	GENERATED_BODY()
-	
+
+private:
+	virtual bool GivePickupTo(APawn* PlayerPawn) override;
 };

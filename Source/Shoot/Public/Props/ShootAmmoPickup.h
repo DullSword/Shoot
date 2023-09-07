@@ -14,4 +14,6 @@ class SHOOT_API AShootAmmoPickup : public AShootPickupBase
 {
 	GENERATED_BODY()
 	
+private:
+	virtual bool GivePickupTo(APawn* PlayerPawn) override;
 };

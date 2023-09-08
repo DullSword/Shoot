@@ -55,6 +55,8 @@ void UHealthComponent::OnTakeAnyDamage(AActor* DamagedActor, float Damage, const
 	{
 		World->GetTimerManager().SetTimer(HealTimer, this, &UHealthComponent::Heal, HealRate, true, HealFirstDelay);
 	}
+
+	StartCameraShake();
 }
 
 void UHealthComponent::SetHealth(float NewHealth)
@@ -82,4 +84,26 @@ bool UHealthComponent::TryToAddHealth(float HealingAmount)
 
 	SetHealth(Health + HealingAmount);
 	return true;
+}
+
+void UHealthComponent::StartCameraShake()
+{
+	if (IsDead())
+	{
+		return;
+	}
+
+	const auto Pawn = Cast<APawn>(GetOwner());
+	if (!Pawn)
+	{
+		return;
+	}
+
+	const auto Controller = Pawn->GetController<APlayerController>();
+	if (!Controller || !Controller->PlayerCameraManager)
+	{
+		return;
+	}
+
+	Controller->PlayerCameraManager->StartCameraShake(CameraShakeClass);
 }

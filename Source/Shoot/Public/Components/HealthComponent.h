@@ -29,7 +29,7 @@ public:
 
 	bool TryToAddHealth(float HealingAmount);
 
-	FOnDeadSignature OnDead;
+	FOnDeadSignature		 OnDead;
 	FOnHealthChangeSignature OnHealthChange;
 
 protected:
@@ -51,6 +51,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Heal", meta = (EditCondition = "AutoHeal"))
 	float HealRate = 1.f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+	TSubclassOf<UCameraShakeBase> CameraShakeClass;
+
 private:
 	float Health = 0.f;
 	void  SetHealth(float NewHealth);
@@ -61,4 +64,6 @@ private:
 	FTimerHandle HealTimer;
 
 	void Heal();
+
+	void StartCameraShake();
 };

@@ -5,6 +5,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/GameplayStatics.h"
+#include "Weapon/Components/ShootWeaponVFXComponent.h"
 
 // Sets default values
 AShootProjectile::AShootProjectile()
@@ -16,11 +17,14 @@ AShootProjectile::AShootProjectile()
 	CollisionComponent->InitSphereRadius(5.f);
 	CollisionComponent->SetCollisionEnabled(ECollisionEnabled::Type::QueryOnly);
 	CollisionComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+	CollisionComponent->bReturnMaterialOnMove = true;
 	SetRootComponent(CollisionComponent);
 
 	MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("MovementComponent"));
 	MovementComponent->InitialSpeed = 2000.f;
 	MovementComponent->ProjectileGravityScale = 0.f;
+
+	WeaponVFXComponent = CreateDefaultSubobject<UShootWeaponVFXComponent>(TEXT("WeaponVFXComponent"));
 }
 
 // Called when the game starts or when spawned
@@ -30,6 +34,7 @@ void AShootProjectile::BeginPlay()
 
 	check(MovementComponent);
 	check(CollisionComponent);
+	check(WeaponVFXComponent);
 
 	MovementComponent->Velocity = ShotDirection * MovementComponent->InitialSpeed;
 	SetLifeSpan(LifeSeconds);
@@ -57,6 +62,7 @@ void AShootProjectile::OnProjectileHit(UPrimitiveComponent* HitComponent, AActor
 		DoFullDamage);
 
 	DrawDebugSphere(GetWorld(), GetActorLocation(), DamageRadius, 24, FColor::Red, false, 5.0f);
+	WeaponVFXComponent->PlayImpactFX(Hit);
 
 	Destroy();
 }

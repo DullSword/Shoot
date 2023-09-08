@@ -6,6 +6,8 @@
 #include "Weapon/ShootWeapon.h"
 #include "RifleWeapon.generated.h"
 
+class UShootWeaponVFXComponent;
+
 /**
  *
  */
@@ -15,10 +17,14 @@ class SHOOT_API ARifleWeapon : public AShootWeapon
 	GENERATED_BODY()
 
 public:
+	ARifleWeapon();
+
 	virtual void StartFire() override;
 	virtual void StopFire() override;
 
 protected:
+	virtual void BeginPlay() override;
+	
 	UPROPERTY(EditDefaultsOnly)
 	float TimeBetweenShoots = 0.2f;
 
@@ -36,4 +42,7 @@ private:
 	FTimerHandle ShootTimer;
 
 	void MakeDamage(FHitResult& HitResult);
+
+	UPROPERTY(VisibleAnywhere, Category = "VFX")
+	UShootWeaponVFXComponent* WeaponVFXComponent;
 };

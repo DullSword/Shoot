@@ -8,6 +8,7 @@
 
 class USphereComponent;
 class UProjectileMovementComponent;
+class UShootWeaponVFXComponent;
 
 UCLASS()
 class SHOOT_API AShootProjectile : public AActor
@@ -49,4 +50,7 @@ private:
 	void OnProjectileHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 	AController* GetController() const;
+
+	UPROPERTY(VisibleAnywhere, Category = "VFX")
+	UShootWeaponVFXComponent* WeaponVFXComponent;
 };

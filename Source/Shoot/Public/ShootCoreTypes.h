@@ -3,6 +3,7 @@
 #include "ShootCoreTypes.generated.h"
 
 class AShootWeapon;
+class UNiagaraSystem;
 
 // weapon
 USTRUCT(BlueprintType)
@@ -49,3 +50,34 @@ DECLARE_MULTICAST_DELEGATE(FOnClipEmptySignature)
 // health
 DECLARE_MULTICAST_DELEGATE(FOnDeadSignature)
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChangeSignature, float)
+
+// VFX
+USTRUCT(BlueprintType)
+struct FDecalData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+	UMaterialInterface* Material;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+	FVector Size = FVector(10.f);
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+	float LifeSpan = 5.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+	float FadeOutTime = .7f;
+};
+
+USTRUCT(BlueprintType)
+struct FImpactData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+	UNiagaraSystem* NiagaraSystem;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
+	FDecalData DecalData;
+};

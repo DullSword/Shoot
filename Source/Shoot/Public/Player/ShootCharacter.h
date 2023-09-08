@@ -43,7 +43,7 @@ protected:
 	void Sprint();
 	void StopSprint();
 
-	void OnHealthChange(float Health);
+	void OnHealthChange(float Health, float HealthDelta);
 	void OnDead();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Dead")

@@ -49,7 +49,7 @@ DECLARE_MULTICAST_DELEGATE(FOnClipEmptySignature)
 
 // health
 DECLARE_MULTICAST_DELEGATE(FOnDeadSignature)
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChangeSignature, float)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHealthChangeSignature, float, float)
 
 // VFX
 USTRUCT(BlueprintType)

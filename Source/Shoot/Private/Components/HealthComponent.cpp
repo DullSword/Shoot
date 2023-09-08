@@ -61,8 +61,11 @@ void UHealthComponent::OnTakeAnyDamage(AActor* DamagedActor, float Damage, const
 
 void UHealthComponent::SetHealth(float NewHealth)
 {
-	Health = FMath::Clamp(NewHealth, 0.f, MaxHealth);
-	OnHealthChange.Broadcast(Health);
+	const auto NextHealth = FMath::Clamp(NewHealth, 0.f, MaxHealth);
+	const auto HealthDelta = NextHealth - Health;
+
+	Health = NextHealth;
+	OnHealthChange.Broadcast(Health, HealthDelta);
 }
 
 void UHealthComponent::Heal()

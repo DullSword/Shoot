@@ -1,12 +1,23 @@
 // Shoot Game. All Rights Reserved.
 
-
 #include "UI/ShootPlayerHUDWidget.h"
 #include "components/HealthComponent.h"
 #include "Components/WeaponComponent.h"
 #include "ShootUtils.h"
 
-float UShootPlayerHUDWidget::GetHealthPercent() const {
+bool UShootPlayerHUDWidget::Initialize()
+{
+	const auto HealthComponent = ShootUtils::GetShootPlayerComponent<UHealthComponent>(GetOwningPlayerPawn());
+	if (HealthComponent)
+	{
+		HealthComponent->OnHealthChange.AddUObject(this, &UShootPlayerHUDWidget::OnHealthChanged);
+	}
+
+	return Super::Initialize();
+}
+
+float UShootPlayerHUDWidget::GetHealthPercent() const
+{
 	const auto HealthComponent = ShootUtils::GetShootPlayerComponent<UHealthComponent>(GetOwningPlayerPawn());
 	if (!HealthComponent)
 	{
@@ -48,4 +59,12 @@ bool UShootPlayerHUDWidget::IsPlayerSpectating() const
 {
 	const auto Controller = GetOwningPlayer();
 	return Controller && Controller->GetStateName() == NAME_Spectating;
+}
+
+void UShootPlayerHUDWidget::OnHealthChanged(float Health, float HealthDelta)
+{
+	if (HealthDelta < 0.f)
+	{
+		OnTakeDamage();
+	}
 }

@@ -34,7 +34,7 @@ void AShootCharacter::BeginPlay()
 	check(HealthComponent);
 	check(GetMesh());
 
-	OnHealthChange(HealthComponent->GetHealth());
+	OnHealthChange(HealthComponent->GetHealth(), 0.f);
 	HealthComponent->OnHealthChange.AddUObject(this, &AShootCharacter::OnHealthChange);
 	HealthComponent->OnDead.AddUObject(this, &AShootCharacter::OnDead);
 
@@ -117,7 +117,7 @@ void AShootCharacter::StopSprint()
 	}
 }
 
-void AShootCharacter::OnHealthChange(float Health)
+void AShootCharacter::OnHealthChange(float Health, float HealthDelta)
 {
 	HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }

@@ -32,6 +32,7 @@ void AShootCharacter::BeginPlay()
 	check(CharacterMovementComponent);
 	check(HealthTextComponent);
 	check(HealthComponent);
+	check(GetMesh());
 
 	OnHealthChange(HealthComponent->GetHealth());
 	HealthComponent->OnHealthChange.AddUObject(this, &AShootCharacter::OnHealthChange);
@@ -124,7 +125,7 @@ void AShootCharacter::OnHealthChange(float Health)
 void AShootCharacter::OnDead()
 {
 	CharacterMovementComponent->DisableMovement();
-	PlayAnimMontage(DeadMontage);
+	//PlayAnimMontage(DeadMontage);
 	SetLifeSpan(LifeSpan);
 	if (auto CharacterCapsuleComponent = GetCapsuleComponent(); CharacterCapsuleComponent)
 	{
@@ -137,6 +138,10 @@ void AShootCharacter::OnDead()
 	}
 
 	WeaponComponent->StopFire();
+	
+	//Ragdoll
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::Type::PhysicsOnly);
+	GetMesh()->SetSimulatePhysics(true);
 }
 
 void AShootCharacter::TakeFallingDamage(const FHitResult& Hit)

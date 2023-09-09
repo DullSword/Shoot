@@ -3,6 +3,7 @@
 #include "Weapon/RifleWeapon.h"
 #include "DrawDebugHelpers.h"
 #include "Weapon/Components/ShootWeaponVFXComponent.h"
+#include "NiagaraComponent.h"
 
 ARifleWeapon::ARifleWeapon()
 {
@@ -20,6 +21,8 @@ void ARifleWeapon::StartFire()
 {
 	Super::StartFire();
 
+	InitMuzzleVFX();
+
 	GetWorldTimerManager().SetTimer(ShootTimer, this, &ARifleWeapon::MakeShoot, TimeBetweenShoots, true);
 	MakeShoot();
 }
@@ -29,6 +32,8 @@ void ARifleWeapon::StopFire()
 	Super::StopFire();
 
 	GetWorldTimerManager().ClearTimer(ShootTimer);
+
+	SetMuzzleVFXVisibility(false);
 }
 
 void ARifleWeapon::MakeShoot()
@@ -63,7 +68,7 @@ void ARifleWeapon::MakeShoot()
 		MakeDamage(HitResult);
 
 		DrawDebugLine(GetWorld(), GetMuzzleTransform().GetLocation(), HitResult.ImpactPoint, FColor::Red, false, 3.f, 0, 2.f);
-		//DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.f, 24, FColor::Red, false, 5.f);
+		// DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.f, 24, FColor::Red, false, 5.f);
 		WeaponVFXComponent->PlayImpactFX(HitResult);
 
 		UE_LOG(LogTemp, Warning, TEXT("Bone name: %s"), *HitResult.BoneName.ToString());
@@ -98,4 +103,23 @@ void ARifleWeapon::MakeDamage(FHitResult& HitResult)
 		return;
 	}
 	DamagedActor->TakeDamage(DamageAmount, FDamageEvent{}, GetPlayerController(), this);
+}
+
+void ARifleWeapon::InitMuzzleVFX()
+{
+	if (!MuzzleNiagaraComponent)
+	{
+		MuzzleNiagaraComponent = SpawnMuzzleVFX();
+	}
+	SetMuzzleVFXVisibility(true);
+}
+
+void ARifleWeapon::SetMuzzleVFXVisibility(bool Visible)
+{
+	if (!MuzzleNiagaraComponent)
+	{
+		return;
+	}
+
+	MuzzleNiagaraComponent->SetVisibility(Visible);
 }

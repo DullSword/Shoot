@@ -28,6 +28,9 @@ void ALauncherWeapon::MakeShoot()
 
 	DecreaseAmmo();
 
+	// Muzzle VFX
+	SpawnMuzzleVFX();
+
 	FHitResult HitResult;
 	MakeHit(HitResult, TraceStart, TraceEnd);
 

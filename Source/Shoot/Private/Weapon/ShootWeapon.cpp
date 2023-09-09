@@ -2,6 +2,7 @@
 
 #include "Weapon/ShootWeapon.h"
 #include "GameFramework/Character.h"
+#include "NiagaraFunctionLibrary.h"
 
 // Sets default values
 AShootWeapon::AShootWeapon()
@@ -178,4 +179,16 @@ void AShootWeapon::LogAmmo()
 bool AShootWeapon::CanReload() const
 {
 	return CurrentAmmo.Bullets < DefaultAmmo.Bullets && (CurrentAmmo.Infinite || CurrentAmmo.Clips > 0);
+}
+
+UNiagaraComponent* AShootWeapon::SpawnMuzzleVFX()
+{
+	return UNiagaraFunctionLibrary::SpawnSystemAttached(
+		MuzzleVFX,
+		WeaponMesh,
+		MuzzleSocketName,
+		FVector::ZeroVector,
+		FRotator::ZeroRotator,
+		EAttachLocation::Type::SnapToTarget,
+		true);
 }

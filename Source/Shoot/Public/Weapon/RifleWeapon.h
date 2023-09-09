@@ -24,7 +24,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	
+
 	UPROPERTY(EditDefaultsOnly)
 	float TimeBetweenShoots = 0.2f;
 
@@ -45,4 +45,10 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "VFX")
 	UShootWeaponVFXComponent* WeaponVFXComponent;
+
+	// MuzzleVFX
+	UNiagaraComponent* MuzzleNiagaraComponent;
+
+	void InitMuzzleVFX();
+	void SetMuzzleVFXVisibility(bool Visible);
 };

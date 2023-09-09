@@ -7,6 +7,8 @@
 #include "ShootCoreTypes.h"
 #include "ShootWeapon.generated.h"
 
+class UNiagaraComponent;
+
 UCLASS()
 class SHOOT_API AShootWeapon : public AActor
 {
@@ -62,6 +64,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	FWeaponUIData UIData;
+
+	// MuzzleVFX
+	UPROPERTY(EditDefaultsOnly, Category = "VFX")
+	UNiagaraSystem* MuzzleVFX;
+
+	UNiagaraComponent* SpawnMuzzleVFX();
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Components")

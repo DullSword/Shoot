@@ -38,6 +38,13 @@ protected:
 
 	virtual bool GetTraceData(FVector& TraceStart, FVector& TraceEnd) const override;
 
+	// TraceVFX
+	UPROPERTY(EditDefaultsOnly, Category = "VFX")
+	UNiagaraSystem* TraceNiagaraSystem;
+
+	UPROPERTY(EditDefaultsOnly, Category = "VFX")
+	FString TraceTargetName = "TraceTarget";
+
 private:
 	FTimerHandle ShootTimer;
 
@@ -51,4 +58,5 @@ private:
 
 	void InitMuzzleVFX();
 	void SetMuzzleVFXVisibility(bool Visible);
+	void SpawnTraceVFX(const FVector& TraceStart, const FVector& TraceEnd);
 };

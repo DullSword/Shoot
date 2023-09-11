@@ -7,11 +7,13 @@
 #include "ShootAIController.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class SHOOT_API AShootAIController : public AAIController
 {
 	GENERATED_BODY()
-	
+
+protected:
+	virtual void OnPossess(APawn* InPawn) override;
 };

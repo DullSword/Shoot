@@ -6,6 +6,8 @@
 #include "Player/ShootCharacter.h"
 #include "ShootAICharacter.generated.h"
 
+class UBehaviorTree;
+
 /**
  *
  */
@@ -16,4 +18,7 @@ class SHOOT_API AShootAICharacter : public AShootCharacter
 
 public:
 	AShootAICharacter();
+
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	UBehaviorTree* BehaviorTreeAsset;
 };

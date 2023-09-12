@@ -6,6 +6,8 @@
 #include "AIController.h"
 #include "ShootAIController.generated.h"
 
+class UShootAIPerceptionComponent;
+
 /**
  *
  */
@@ -14,6 +16,14 @@ class SHOOT_API AShootAIController : public AAIController
 {
 	GENERATED_BODY()
 
+public:
+	AShootAIController();
+
+	virtual void Tick(float DeltaTime) override;
+
 protected:
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UShootAIPerceptionComponent* ShootPerceptionComponent;
+
 	virtual void OnPossess(APawn* InPawn) override;
 };

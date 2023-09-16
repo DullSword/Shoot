@@ -5,17 +5,28 @@
 
 void ALauncherWeapon::StartFire()
 {
+	Super::StartFire();
+
 	MakeShoot();
 }
 
 void ALauncherWeapon::MakeShoot()
 {
-	if (IsTotalAmmoEmpty())
+	if (!CanFire)
 	{
 		return;
 	}
+	else
+	{
+		CanFire = false;
+		GetWorldTimerManager().SetTimer(
+			ShootTimer,
+			[this]() { CanFire = true; },
+			TimeBetweenShoots,
+			false);
+	}
 
-	if (!GetWorld())
+	if (IsTotalAmmoEmpty() || !GetWorld())
 	{
 		return;
 	}

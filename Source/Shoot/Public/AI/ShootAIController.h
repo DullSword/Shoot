@@ -25,5 +25,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UShootAIPerceptionComponent* ShootPerceptionComponent;
 
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	FName FocusOnKeyName = "EnemyActor";
+
 	virtual void OnPossess(APawn* InPawn) override;
+
+private:
+	AActor* GetFocusOnActor() const;
 };

@@ -28,6 +28,7 @@ public:
 
 	FWeaponUIData GetUIData() const { return UIData; }
 	FAmmoData	  GetAmmoData() const { return CurrentAmmo; }
+	float		  GetTraceMaxDistance() const { return TraceMaxDistance; }
 
 	FOnClipEmptySignature OnClipEmpty;
 

@@ -26,6 +26,7 @@ public:
 
 	bool GetCurrentWeaponUIData(FWeaponUIData& UIData) const;
 	bool GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const;
+	const AShootWeapon* GetCurrentWeapon() const { return CurrentWeapon; }
 
 	bool TryToAddAmmo(TSubclassOf<AShootWeapon> WeaponType, int32 BulletAmount);
 

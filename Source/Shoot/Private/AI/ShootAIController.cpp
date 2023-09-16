@@ -3,6 +3,7 @@
 #include "AI/ShootAIController.h"
 #include "AI/ShootAICharacter.h"
 #include "Components/ShootAIPerceptionComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 AShootAIController::AShootAIController()
 {
@@ -14,8 +15,8 @@ void AShootAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	AActor* ClosestEnemy = ShootPerceptionComponent->GetClosestEnemy();
-	SetFocus(ClosestEnemy);
+	AActor* AimActor = GetFocusOnActor();
+	SetFocus(AimActor);
 }
 
 void AShootAIController::OnPossess(APawn* InPawn)
@@ -29,4 +30,14 @@ void AShootAIController::OnPossess(APawn* InPawn)
 	}
 
 	RunBehaviorTree(AICharacter->BehaviorTreeAsset);
+}
+
+AActor* AShootAIController::GetFocusOnActor() const
+{
+	const auto BlackBoardComponent = GetBlackboardComponent();
+	if (!BlackBoardComponent)
+	{
+		return nullptr;
+	}
+	return Cast<AActor>(BlackBoardComponent->GetValueAsObject(FocusOnKeyName));
 }

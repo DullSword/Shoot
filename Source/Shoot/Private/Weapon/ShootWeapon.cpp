@@ -28,7 +28,6 @@ void AShootWeapon::BeginPlay()
 
 void AShootWeapon::StartFire()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Fire!"));
 }
 
 void AShootWeapon::StopFire()
@@ -52,13 +51,28 @@ APlayerController* AShootWeapon::GetPlayerController() const
 
 bool AShootWeapon::GetPlayerViewPoint(FVector& OutViewLocation, FRotator& OutViewRotation) const
 {
-	const auto PlayerController = GetPlayerController();
-	if (!PlayerController)
+	const auto Character = Cast<ACharacter>(GetOwner());
+	if (!Character)
 	{
 		return false;
 	}
 
-	PlayerController->GetPlayerViewPoint(OutViewLocation, OutViewRotation);
+	if (Character->IsPlayerControlled())
+	{
+		const auto PlayerController = GetPlayerController();
+		if (!PlayerController)
+		{
+			return false;
+		}
+
+		PlayerController->GetPlayerViewPoint(OutViewLocation, OutViewRotation);
+	}
+	else
+	{
+		OutViewLocation = GetMuzzleTransform().GetLocation();
+		OutViewRotation = GetMuzzleTransform().GetRotation().Rotator();
+	}
+
 	return true;
 }
 

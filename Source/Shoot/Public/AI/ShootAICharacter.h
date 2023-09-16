@@ -17,8 +17,11 @@ class SHOOT_API AShootAICharacter : public AShootCharacter
 	GENERATED_BODY()
 
 public:
-	AShootAICharacter();
+	AShootAICharacter(const FObjectInitializer& ObjectInitializer);
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	UBehaviorTree* BehaviorTreeAsset;
+
+protected:
+	virtual void OnDead() override;
 };

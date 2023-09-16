@@ -8,7 +8,7 @@
 #include "Components/CapsuleComponent.h"
 
 // Sets default values
-AShootCharacter::AShootCharacter()
+AShootCharacter::AShootCharacter(const FObjectInitializer& ObjectInitializer)
 {
 	// Set this character to call Tick() every frame.  You can turn this off to
 	// improve performance if you don't need it.
@@ -125,7 +125,7 @@ void AShootCharacter::OnHealthChange(float Health, float HealthDelta)
 void AShootCharacter::OnDead()
 {
 	CharacterMovementComponent->DisableMovement();
-	//PlayAnimMontage(DeadMontage);
+	// PlayAnimMontage(DeadMontage);
 	SetLifeSpan(LifeSpan);
 	if (auto CharacterCapsuleComponent = GetCapsuleComponent(); CharacterCapsuleComponent)
 	{
@@ -138,8 +138,8 @@ void AShootCharacter::OnDead()
 	}
 
 	WeaponComponent->StopFire();
-	
-	//Ragdoll
+
+	// Ragdoll
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::Type::PhysicsOnly);
 	GetMesh()->SetSimulatePhysics(true);
 }

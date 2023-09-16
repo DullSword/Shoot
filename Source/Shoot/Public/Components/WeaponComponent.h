@@ -18,10 +18,10 @@ public:
 	// Sets default values for this component's properties
 	UWeaponComponent();
 
-	void StartFire();
+	virtual void StartFire();
 	void StopFire();
 
-	void NextWeapon();
+	virtual void NextWeapon();
 	void Reload();
 
 	bool GetCurrentWeaponUIData(FWeaponUIData& UIData) const;
@@ -35,6 +35,9 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+	bool CanEquip() const;
+	void EquipWeapon(int32 WeaponIndex);
+
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	TArray<FWeaponData> WeaponDatas;
 
@@ -47,28 +50,26 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
 	UAnimMontage* EquipAnimMontage;
 
-private:
-	UPROPERTY()
-	AShootWeapon* CurrentWeapon = nullptr;
-
 	UPROPERTY()
 	TArray<AShootWeapon*> Weapons;
 
 	int32 CurrentWeaponIndex = 0;
+
+private:
+	UPROPERTY()
+	AShootWeapon* CurrentWeapon = nullptr;
 
 	UPROPERTY()
 	UAnimMontage* CurrentReloadAnimMontage = nullptr;
 
 	void SpawnWeapon();
 	void AttachWeaponToSocket(AShootWeapon* Weapon, USceneComponent* SceneComponent, const FName& SocketName);
-	void EquipWeapon(int32 WeaponIndex);
 
 	void PlayAnimMontage(UAnimMontage* AnimMontage);
 	void InitAnimations();
 
 	bool EquipAnimInProcess = false;
 	bool CanFire() const;
-	bool CanEquip() const;
 	void OnEquipFinished(USkeletalMeshComponent* MeshComponent);
 
 	bool ReloadAnimInProcess = false;

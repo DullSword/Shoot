@@ -24,6 +24,7 @@ public:
 	bool CanReload() const;
 	void ChangeClip();
 
+	bool IsTotalAmmoEmpty() const;
 	bool TryToAddAmmo(int32 BulletAmount);
 
 	FWeaponUIData GetUIData() const { return UIData; }
@@ -58,7 +59,6 @@ protected:
 	FAmmoData DefaultAmmo{ 15, 10, false };
 
 	void DecreaseAmmo();
-	bool IsTotalAmmoEmpty() const;
 	bool IsCurrentClipEmpty() const;
 	bool IsAmmoFull() const;
 	void LogAmmo();

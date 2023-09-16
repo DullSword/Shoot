@@ -20,7 +20,7 @@ class SHOOT_API AShootCharacter : public ACharacter
 
 public:
 	// Sets default values for this character's properties
-	AShootCharacter();
+	AShootCharacter(const FObjectInitializer& ObjectInitializer);
 
 protected:
 	// Called when the game starts or when spawned
@@ -44,7 +44,7 @@ protected:
 	void StopSprint();
 
 	void OnHealthChange(float Health, float HealthDelta);
-	void OnDead();
+	virtual void OnDead();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Dead")
 	UAnimMontage* DeadMontage;

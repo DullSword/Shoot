@@ -17,6 +17,5 @@ class SHOOT_API UShootEnvQueryContext_Enemy : public UEnvQueryContext
 	virtual void ProvideContext(FEnvQueryInstance& QueryInstance, FEnvQueryContextData& ContextData) const;
 
 protected:
-	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	FName EnemyActorKeyName = "EnemyActor";
 };

@@ -7,7 +7,7 @@
 UShootFireService::UShootFireService()
 {
 	NodeName = "Fire";
-	//bNotifyCeaseRelevant = true;
+	bNotifyCeaseRelevant = true;
 }
 
 void UShootFireService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
@@ -23,16 +23,16 @@ void UShootFireService::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 }
 
-//void UShootFireService::OnCeaseRelevant(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
-//{
-//	const auto WeaponComponent = GetWeaponComponent(OwnerComp);
-//	if (!WeaponComponent)
-//	{
-//		return;
-//	}
-//
-//	WeaponComponent->StopFire();
-//}
+void UShootFireService::OnCeaseRelevant(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+{
+	const auto WeaponComponent = GetWeaponComponent(OwnerComp);
+	if (!WeaponComponent)
+	{
+		return;
+	}
+
+	WeaponComponent->StopFire();
+}
 
 UWeaponComponent* UShootFireService::GetWeaponComponent(UBehaviorTreeComponent& BTComponent) const
 {

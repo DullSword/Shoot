@@ -17,6 +17,8 @@ public:
 	// Sets default values for this actor's properties
 	AShootPickupBase();
 
+	bool CouldBeTaken() const;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -32,6 +34,7 @@ public:
 	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
 
 private:
+	UPROPERTY()
 	USphereComponent* CollisionComponent;
 
 	UPROPERTY()
@@ -45,4 +48,6 @@ private:
 	float RotationYaw = 0.0f;
 
 	void GenerateRotationYaw();
+
+	FTimerHandle RespawnTimerHandle;
 };

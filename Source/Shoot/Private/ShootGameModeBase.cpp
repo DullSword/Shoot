@@ -19,6 +19,9 @@ void AShootGameModeBase::StartPlay()
 	Super::StartPlay();
 
 	SpawnBots();
+
+	CurrentRound = 1;
+	StartRound();
 }
 
 void AShootGameModeBase::SpawnBots()
@@ -35,6 +38,31 @@ void AShootGameModeBase::SpawnBots()
 	{
 		const auto AIController = GetWorld()->SpawnActor<AAIController>(AIControllerClass, SpawnParameters);
 		RestartPlayer(AIController);
+	}
+}
+
+void AShootGameModeBase::StartRound()
+{
+	RoundCountDown = GameData.RoundSeconds;
+	GetWorldTimerManager().SetTimer(GameRoundTimerHandle, this, &AShootGameModeBase::GameTimerUpdate, 1.f, true);
+}
+
+void AShootGameModeBase::GameTimerUpdate()
+{
+	UE_LOG(LogTemp, Display, TEXT("Time: %i / Round: %i/%i"), RoundCountDown, CurrentRound, GameData.RoundsNum);
+
+	if (--RoundCountDown == 0)
+	{
+		GetWorldTimerManager().ClearTimer(GameRoundTimerHandle);
+
+		if (++CurrentRound <= GameData.RoundsNum)
+		{
+			StartRound();
+		}
+		else
+		{
+			UE_LOG(LogTemp, Display, TEXT("======== GAME OVER ========"));
+		}
 	}
 }
 

@@ -72,7 +72,7 @@ void ARifleWeapon::MakeShoot()
 		TraceVFXEnd = HitResult.ImpactPoint;
 		WeaponVFXComponent->PlayImpactFX(HitResult);
 
-		UE_LOG(LogTemp, Warning, TEXT("Bone name: %s"), *HitResult.BoneName.ToString());
+		//UE_LOG(LogTemp, Warning, TEXT("Bone name: %s"), *HitResult.BoneName.ToString());
 	}
 
 	SpawnTraceVFX(GetMuzzleTransform().GetLocation(), TraceVFXEnd);

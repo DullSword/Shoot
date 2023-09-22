@@ -159,7 +159,7 @@ void AShootWeapon::ChangeClip()
 		amount = CurrentAmmo.Bullets + ReplacedBullets;
 	}
 	CurrentAmmo.Bullets = amount;
-	UE_LOG(LogTemp, Display, TEXT("------ Change Clip ------"));
+	//UE_LOG(LogTemp, Display, TEXT("------ Change Clip ------"));
 }
 
 bool AShootWeapon::TryToAddAmmo(int32 BulletAmount)

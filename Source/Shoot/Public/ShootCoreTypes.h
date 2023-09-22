@@ -51,8 +51,8 @@ DECLARE_MULTICAST_DELEGATE(FOnClipEmptySignature)
 DECLARE_MULTICAST_DELEGATE(FOnDeadSignature)
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHealthChangeSignature, float, float)
 
-// VFX
-USTRUCT(BlueprintType)
+	// VFX
+	USTRUCT(BlueprintType)
 struct FDecalData
 {
 	GENERATED_BODY()
@@ -80,4 +80,13 @@ struct FImpactData
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
 	FDecalData DecalData;
+};
+
+USTRUCT(BlueprintType)
+struct FGameData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game", meta = (ClampMin = "1", ClampMax = "100"))
+	int32 PlayersNum = 2;
 };

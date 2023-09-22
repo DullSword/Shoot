@@ -14,4 +14,22 @@ class SHOOT_API AShootGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 
+public:
+	AShootGameModeBase();
+
+	virtual void StartPlay() override;
+	virtual UClass* GetDefaultPawnClassForController_Implementation(AController* InController) override;
+
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Game")
+	TSubclassOf<AAIController> AIControllerClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Game")
+	TSubclassOf<APawn> AIPawnClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Game")
+	FGameData GameData;
+
+private:
+	void SpawnBots();
 };

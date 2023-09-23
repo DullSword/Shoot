@@ -9,6 +9,8 @@ AShootAIController::AShootAIController()
 {
 	ShootPerceptionComponent = CreateDefaultSubobject<UShootAIPerceptionComponent>(TEXT("ShootPerceptionComponent"));
 	SetPerceptionComponent(*ShootPerceptionComponent);
+
+	bWantsPlayerState = true; //生成PlayerState，为了ShootGameModeBase里ResetOnePlayer的Pawn的Reset能有效执行
 }
 
 void AShootAIController::Tick(float DeltaTime)

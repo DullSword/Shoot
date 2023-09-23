@@ -32,7 +32,7 @@ void AShootGameModeBase::SpawnBots()
 	}
 
 	FActorSpawnParameters SpawnParameters;
-	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	for (int32 i = 0; i < GameData.PlayersNum - 1; i++)
 	{
@@ -57,6 +57,7 @@ void AShootGameModeBase::GameTimerUpdate()
 
 		if (++CurrentRound <= GameData.RoundsNum)
 		{
+			ResetPlayers();
 			StartRound();
 		}
 		else
@@ -64,6 +65,28 @@ void AShootGameModeBase::GameTimerUpdate()
 			UE_LOG(LogTemp, Display, TEXT("======== GAME OVER ========"));
 		}
 	}
+}
+
+void AShootGameModeBase::ResetPlayers()
+{
+	if (!GetWorld())
+	{
+		return;
+	}
+
+	for (auto It = GetWorld()->GetControllerIterator(); It; ++It)
+	{
+		ResetOnePlayer(It->Get());
+	}
+}
+
+void AShootGameModeBase::ResetOnePlayer(AController* Controller)
+{
+	if (Controller && Controller->GetPawn())
+	{
+		Controller->GetPawn()->Reset(); //为了RestartPlayerAtPlayerStart能进入`else if (GetDefaultPawnClassForController(NewPlayer) != nullptr)`这个分支，重新生成Pawn
+	}
+	RestartPlayer(Controller);
 }
 
 UClass* AShootGameModeBase::GetDefaultPawnClassForController_Implementation(AController* InController)

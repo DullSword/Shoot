@@ -6,12 +6,14 @@
 #include "UI/ShootHUD.h"
 #include "AIController.h"
 #include "ShootCoreTypes.h"
+#include "ShootPlayerState.h"
 
 AShootGameModeBase::AShootGameModeBase()
 {
 	DefaultPawnClass = AShootCharacter::StaticClass();
 	PlayerControllerClass = AShootPlayerController::StaticClass();
 	HUDClass = AShootHUD::StaticClass();
+	PlayerStateClass = AShootPlayerState::StaticClass();
 }
 
 void AShootGameModeBase::StartPlay()
@@ -19,6 +21,7 @@ void AShootGameModeBase::StartPlay()
 	Super::StartPlay();
 
 	SpawnBots();
+	CreateTeamInfos();
 
 	CurrentRound = 1;
 	StartRound();
@@ -84,9 +87,72 @@ void AShootGameModeBase::ResetOnePlayer(AController* Controller)
 {
 	if (Controller && Controller->GetPawn())
 	{
-		Controller->GetPawn()->Reset(); //为了RestartPlayerAtPlayerStart能进入`else if (GetDefaultPawnClassForController(NewPlayer) != nullptr)`这个分支，重新生成Pawn
+		Controller->GetPawn()->Reset(); // 为了RestartPlayerAtPlayerStart能进入`else if (GetDefaultPawnClassForController(NewPlayer) != nullptr)`这个分支，重新生成Pawn
 	}
 	RestartPlayer(Controller);
+	SetPlayerColor(Controller);
+}
+
+void AShootGameModeBase::CreateTeamInfos()
+{
+	if (!GetWorld())
+	{
+		return;
+	}
+
+	int32 TeamID = 1;
+	for (auto It = GetWorld()->GetControllerIterator(); It; ++It)
+	{
+		const auto Controller = It->Get();
+		if (!Controller)
+		{
+			continue;
+		}
+
+		const auto PlayerState = Cast<AShootPlayerState>(Controller->PlayerState);
+		if (!PlayerState)
+		{
+			continue;
+		}
+
+		PlayerState->SetTeamID(TeamID);
+		PlayerState->SetTeamColor(DetermineColorByTeamID(TeamID));
+		SetPlayerColor(Controller);
+
+		TeamID = TeamID == 1 ? 2 : 1;
+	}
+}
+
+FLinearColor AShootGameModeBase::DetermineColorByTeamID(int32 TeamID) const
+{
+	if (TeamID - 1 < GameData.TeamColors.Num())
+	{
+		return GameData.TeamColors[TeamID - 1];
+	}
+	UE_LOG(LogTemp, Warning, TEXT("No color for team id: %i, set to default: %s"), TeamID, *GameData.DefaultTeamColor.ToString());
+	return GameData.DefaultTeamColor;
+}
+
+void AShootGameModeBase::SetPlayerColor(AController* Controller)
+{
+	if (!Controller)
+	{
+		return;
+	}
+
+	const auto Character = Cast<AShootCharacter>(Controller->GetPawn());
+	if (!Character)
+	{
+		return;
+	}
+
+	const auto PlayerState = Cast<AShootPlayerState>(Controller->PlayerState);
+	if (!PlayerState)
+	{
+		return;
+	}
+
+	Character->SetPlayerColor(PlayerState->GetTeamColor());
 }
 
 UClass* AShootGameModeBase::GetDefaultPawnClassForController_Implementation(AController* InController)

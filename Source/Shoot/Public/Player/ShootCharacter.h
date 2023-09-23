@@ -36,6 +36,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetMovementDirection() const;
 
+	void SetPlayerColor(FLinearColor Color);
+
 protected:
 	void MoveForward(float Amount);
 	void MoveRight(float Amount);
@@ -60,6 +62,9 @@ protected:
 
 	UFUNCTION()
 	void TakeFallingDamage(const FHitResult& Hit);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Material")
+	FName MaterialColorName = "Paint Color";
 
 private:
 	UPROPERTY()

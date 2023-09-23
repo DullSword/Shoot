@@ -101,6 +101,17 @@ float AShootCharacter::GetMovementDirection() const
 	return CrossProduct.IsZero() ? Degress : Degress * FMath::Sign(CrossProduct.Z);
 }
 
+void AShootCharacter::SetPlayerColor(FLinearColor Color)
+{
+	const auto MaterialInst = GetMesh()->CreateAndSetMaterialInstanceDynamic(0);
+	if (!MaterialInst)
+	{
+		return;
+	}
+
+	MaterialInst->SetVectorParameterValue(MaterialColorName, Color);
+}
+
 void AShootCharacter::Sprint()
 {
 	if (CharacterMovementComponent)

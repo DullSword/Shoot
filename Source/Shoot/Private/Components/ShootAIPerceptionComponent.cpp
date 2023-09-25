@@ -4,6 +4,7 @@
 #include "Perception/AISense_Sight.h"
 #include "AIController.h"
 #include "Components/HealthComponent.h"
+#include "ShootPlayerState.h"
 
 AActor* UShootAIPerceptionComponent::GetClosestEnemy() const
 {
@@ -26,13 +27,16 @@ AActor* UShootAIPerceptionComponent::GetClosestEnemy() const
 		return nullptr;
 	}
 
-	float	ClosestDistance = MAX_FLT;
+	float ClosestDistance = MAX_FLT;
 	AActor* ClosestActor = nullptr;
 
 	for (const auto& PerceivedActor : PerceivedActors)
 	{
+		const auto PerceivePawn = Cast<APawn>(PerceivedActor);
+		const auto bIsEnemy = PerceivePawn && IsEnemy(Controller, PerceivePawn->Controller);
+
 		const auto HealthComponent = Cast<UHealthComponent>(PerceivedActor->GetComponentByClass(UHealthComponent::StaticClass()));
-		if (!HealthComponent || HealthComponent->IsDead())
+		if (!HealthComponent || HealthComponent->IsDead() || !bIsEnemy)
 		{
 			continue;
 		}
@@ -46,4 +50,17 @@ AActor* UShootAIPerceptionComponent::GetClosestEnemy() const
 	}
 
 	return ClosestActor;
+}
+
+bool UShootAIPerceptionComponent::IsEnemy(AController* Controller, AController* OtherController) const
+{
+	if (!Controller || !OtherController || Controller == OtherController)
+	{
+		return false;
+	}
+
+	const auto PlayerState = Cast<AShootPlayerState>(Controller->PlayerState);
+	const auto OtherPlayerState = Cast<AShootPlayerState>(OtherController->PlayerState);
+
+	return PlayerState && OtherPlayerState && PlayerState->GetTeamID() != OtherPlayerState->GetTeamID();
 }

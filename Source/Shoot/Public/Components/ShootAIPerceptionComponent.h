@@ -16,4 +16,7 @@ class SHOOT_API UShootAIPerceptionComponent : public UAIPerceptionComponent
 
 public:
 	AActor* GetClosestEnemy() const;
+
+private:
+	bool IsEnemy(AController* Controller, AController* OtherController) const;
 };

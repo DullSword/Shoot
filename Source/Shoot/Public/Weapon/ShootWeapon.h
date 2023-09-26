@@ -51,7 +51,7 @@ protected:
 
 	bool GetPlayerViewPoint(FVector& OutViewLocation, FRotator& OutViewRotation) const;
 
-	APlayerController* GetPlayerController() const;
+	AController* GetController() const;
 
 	FTransform GetMuzzleTransform() const;
 

@@ -2,6 +2,7 @@
 
 #include "Components/HealthComponent.h"
 #include "GameFramework/Actor.h"
+#include "ShootGameModeBase.h"
 
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
@@ -49,6 +50,7 @@ void UHealthComponent::OnTakeAnyDamage(AActor* DamagedActor, float Damage, const
 
 	if (IsDead())
 	{
+		Killed(InstigatedBy);
 		OnDead.Broadcast();
 	}
 	else if (auto World = GetWorld(); World && AutoHeal)
@@ -109,4 +111,26 @@ void UHealthComponent::StartCameraShake()
 	}
 
 	Controller->PlayerCameraManager->StartCameraShake(CameraShakeClass);
+}
+
+void UHealthComponent::Killed(AController* KillerController)
+{
+	if (!GetWorld())
+	{
+		return;
+	}
+
+	const auto GameMode = Cast<AShootGameModeBase>(GetWorld()->GetAuthGameMode());
+	if (!GameMode)
+	{
+		return;
+	}
+
+	const auto Pawn = Cast<APawn>(GetOwner());
+	if (!Pawn)
+	{
+		return;
+	}
+
+	GameMode->Killed(KillerController, Pawn->GetController());
 }

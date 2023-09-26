@@ -38,15 +38,15 @@ void AShootWeapon::MakeShoot()
 {
 }
 
-APlayerController* AShootWeapon::GetPlayerController() const
+AController* AShootWeapon::GetController() const
 {
-	const auto Character = Cast<ACharacter>(GetOwner());
-	if (!Character)
+	const auto Pawn = Cast<APawn>(GetOwner());
+	if (!Pawn)
 	{
 		return nullptr;
 	}
 
-	return Character->GetController<APlayerController>();
+	return Pawn->GetController();
 }
 
 bool AShootWeapon::GetPlayerViewPoint(FVector& OutViewLocation, FRotator& OutViewRotation) const
@@ -59,7 +59,7 @@ bool AShootWeapon::GetPlayerViewPoint(FVector& OutViewLocation, FRotator& OutVie
 
 	if (Character->IsPlayerControlled())
 	{
-		const auto PlayerController = GetPlayerController();
+		const auto PlayerController = Cast<APlayerController>(Character->GetController());
 		if (!PlayerController)
 		{
 			return false;

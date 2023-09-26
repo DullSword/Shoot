@@ -101,7 +101,7 @@ void ARifleWeapon::MakeDamage(FHitResult& HitResult)
 	{
 		return;
 	}
-	DamagedActor->TakeDamage(DamageAmount, FDamageEvent{}, GetPlayerController(), this);
+	DamagedActor->TakeDamage(DamageAmount, FDamageEvent{}, GetController(), this);
 }
 
 void ARifleWeapon::InitMuzzleVFX()

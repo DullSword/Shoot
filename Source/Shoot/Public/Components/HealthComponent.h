@@ -32,6 +32,8 @@ public:
 	FOnDeadSignature		 OnDead;
 	FOnHealthChangeSignature OnHealthChange;
 
+	void Killed(AController* KillerController);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

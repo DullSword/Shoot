@@ -66,6 +66,7 @@ void AShootGameModeBase::GameTimerUpdate()
 		else
 		{
 			UE_LOG(LogTemp, Display, TEXT("======== GAME OVER ========"));
+			LogPlayerInfo();
 		}
 	}
 }
@@ -162,4 +163,45 @@ UClass* AShootGameModeBase::GetDefaultPawnClassForController_Implementation(ACon
 		return AIPawnClass;
 	}
 	return Super::GetDefaultPawnClassForController_Implementation(InController);
+}
+
+void AShootGameModeBase::Killed(AController* KillerController, AController* VictimController)
+{
+	const auto KillerPlayerState = KillerController ? Cast<AShootPlayerState>(KillerController->PlayerState) : nullptr;
+	const auto VictimPlayerState = VictimController ? Cast<AShootPlayerState>(VictimController->PlayerState) : nullptr;
+
+	if (KillerPlayerState)
+	{
+		KillerPlayerState->AddKill();
+	}
+
+	if (VictimPlayerState)
+	{
+		VictimPlayerState->AddDeath();
+	}
+}
+
+void AShootGameModeBase::LogPlayerInfo()
+{
+	if (!GetWorld())
+	{
+		return;
+	}
+
+	for (auto It = GetWorld()->GetControllerIterator(); It; ++It)
+	{
+		const auto Controller = It->Get();
+		if (!Controller)
+		{
+			continue;
+		}
+
+		const auto PlayerState = Cast<AShootPlayerState>(Controller->PlayerState);
+		if (!PlayerState)
+		{
+			continue;
+		}
+
+		PlayerState->LogInfo();
+	}
 }

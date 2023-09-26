@@ -4,6 +4,7 @@
 #include "AI/ShootAICharacter.h"
 #include "Components/ShootAIPerceptionComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Components/RespawnComponent.h"
 
 AShootAIController::AShootAIController()
 {
@@ -11,6 +12,8 @@ AShootAIController::AShootAIController()
 	SetPerceptionComponent(*ShootPerceptionComponent);
 
 	bWantsPlayerState = true; //生成PlayerState，为了ShootGameModeBase里ResetOnePlayer的Pawn的Reset能有效执行
+
+	RespawnComponent = CreateDefaultSubobject<URespawnComponent>(TEXT("RespawnComponent"));
 }
 
 void AShootAIController::Tick(float DeltaTime)

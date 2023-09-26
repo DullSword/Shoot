@@ -6,8 +6,10 @@
 #include "GameFramework/PlayerController.h"
 #include "ShootPlayerController.generated.h"
 
+class URespawnComponent;
+
 /**
- * 
+ *
  */
 UCLASS()
 class SHOOT_API AShootPlayerController : public APlayerController
@@ -16,5 +18,8 @@ class SHOOT_API AShootPlayerController : public APlayerController
 
 public:
 	AShootPlayerController();
-	
+
+protected:
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	URespawnComponent* RespawnComponent;
 };

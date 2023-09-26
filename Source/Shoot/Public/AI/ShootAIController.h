@@ -7,6 +7,7 @@
 #include "ShootAIController.generated.h"
 
 class UShootAIPerceptionComponent;
+class URespawnComponent;
 
 /**
  *
@@ -24,6 +25,9 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UShootAIPerceptionComponent* ShootPerceptionComponent;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	URespawnComponent* RespawnComponent;
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	FName FocusOnKeyName = "EnemyActor";

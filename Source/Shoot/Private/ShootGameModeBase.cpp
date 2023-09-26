@@ -7,6 +7,7 @@
 #include "AIController.h"
 #include "ShootCoreTypes.h"
 #include "ShootPlayerState.h"
+#include "Components/RespawnComponent.h"
 
 AShootGameModeBase::AShootGameModeBase()
 {
@@ -179,6 +180,13 @@ void AShootGameModeBase::Killed(AController* KillerController, AController* Vict
 	{
 		VictimPlayerState->AddDeath();
 	}
+
+	if (RoundCountDown < GameData.MinSecondesForRespawn)
+	{
+		return;
+	}
+
+	StartRespawn(VictimController);
 }
 
 void AShootGameModeBase::LogPlayerInfo()
@@ -204,4 +212,20 @@ void AShootGameModeBase::LogPlayerInfo()
 
 		PlayerState->LogInfo();
 	}
+}
+
+void AShootGameModeBase::RespawnRequest(AController* Controller)
+{
+	ResetOnePlayer(Controller);
+}
+
+void AShootGameModeBase::StartRespawn(AController* Controller)
+{
+	const auto RespawnComponent = Cast<URespawnComponent>(Controller->GetComponentByClass(URespawnComponent::StaticClass()));
+	if (!RespawnComponent)
+	{
+		return;
+	}
+
+	RespawnComponent->Respawn(GameData.RespawnSeconds);
 }

@@ -15,6 +15,8 @@ public:
 	URespawnComponent();
 
 	void Respawn(int32 RespawnSeconds);
+	int32 GetRespawnCountDown() const { return RespawnCountDown; }
+	bool IsRespawnInProgress() const;
 
 private:
 	FTimerHandle RespawnTimerHandle;

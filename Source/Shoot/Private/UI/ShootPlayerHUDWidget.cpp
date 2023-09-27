@@ -7,11 +7,11 @@
 
 bool UShootPlayerHUDWidget::Initialize()
 {
-	const auto HealthComponent = ShootUtils::GetShootPlayerComponent<UHealthComponent>(GetOwningPlayerPawn());
-	if (HealthComponent)
+	if (const auto Controller = GetOwningPlayer(); Controller)
 	{
-		HealthComponent->OnHealthChange.AddUObject(this, &UShootPlayerHUDWidget::OnHealthChanged);
+		Controller->GetOnNewPawnNotifier().AddUObject(this, &UShootPlayerHUDWidget::OnNewPawn);
 	}
+	OnNewPawn(GetOwningPlayerPawn());
 
 	return Super::Initialize();
 }
@@ -66,5 +66,14 @@ void UShootPlayerHUDWidget::OnHealthChanged(float Health, float HealthDelta)
 	if (HealthDelta < 0.f)
 	{
 		OnTakeDamage();
+	}
+}
+
+void UShootPlayerHUDWidget::OnNewPawn(APawn* NewPawn)
+{
+	const auto HealthComponent = ShootUtils::GetShootPlayerComponent<UHealthComponent>(NewPawn);
+	if (HealthComponent)
+	{
+		HealthComponent->OnHealthChange.AddUObject(this, &UShootPlayerHUDWidget::OnHealthChanged);
 	}
 }

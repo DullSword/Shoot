@@ -8,6 +8,7 @@
 #include "ShootCoreTypes.h"
 #include "ShootPlayerState.h"
 #include "Components/RespawnComponent.h"
+#include "EngineUtils.h"
 
 AShootGameModeBase::AShootGameModeBase()
 {
@@ -66,8 +67,7 @@ void AShootGameModeBase::GameTimerUpdate()
 		}
 		else
 		{
-			UE_LOG(LogTemp, Display, TEXT("======== GAME OVER ========"));
-			LogPlayerInfo();
+			GameOver();
 		}
 	}
 }
@@ -228,4 +228,19 @@ void AShootGameModeBase::StartRespawn(AController* Controller)
 	}
 
 	RespawnComponent->Respawn(GameData.RespawnSeconds);
+}
+
+void AShootGameModeBase::GameOver()
+{
+	UE_LOG(LogTemp, Display, TEXT("======== GAME OVER ========"));
+	LogPlayerInfo();
+
+	for (const auto& Pawn : TActorRange<APawn>(GetWorld()))
+	{
+		if (Pawn)
+		{
+			Pawn->TurnOff();
+			Pawn->DisableInput(nullptr);
+		}
+	}
 }

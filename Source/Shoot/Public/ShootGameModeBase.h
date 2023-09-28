@@ -28,6 +28,8 @@ public:
 
 	void RespawnRequest(AController* Controller);
 
+	FOnMatchStateChangedSignature OnMatchStateChanged;
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Game")
 	TSubclassOf<AAIController> AIControllerClass;
@@ -58,4 +60,8 @@ private:
 	void StartRespawn(AController* Controller);
 
 	void GameOver();
+
+	EMatchState MatchState = EMatchState::MS_WaitingToStart;
+
+	void SetMatchState(EMatchState NewMatchState);
 };

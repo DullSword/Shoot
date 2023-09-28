@@ -28,6 +28,8 @@ void AShootGameModeBase::StartPlay()
 
 	CurrentRound = 1;
 	StartRound();
+
+	SetMatchState(EMatchState::MS_InProcess);
 }
 
 void AShootGameModeBase::SpawnBots()
@@ -241,4 +243,18 @@ void AShootGameModeBase::GameOver()
 			Pawn->DisableInput(nullptr);
 		}
 	}
+
+	SetMatchState(EMatchState::MS_GameOver);
+}
+
+void AShootGameModeBase::SetMatchState(EMatchState NewMatchState)
+{
+	if (MatchState == NewMatchState)
+	{
+		return;
+	}
+
+	MatchState = NewMatchState;
+
+	OnMatchStateChanged.Broadcast(NewMatchState);
 }

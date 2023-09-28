@@ -25,4 +25,6 @@ protected:
 
 private:
 	void DrawCrossHair();
+
+	void OnMatchStateChanged(EMatchState NewMatchState);
 };

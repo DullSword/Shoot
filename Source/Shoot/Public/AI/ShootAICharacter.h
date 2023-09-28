@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Player/ShootCharacter.h"
+#include "Player/ShootCharacterBase.h"
 #include "ShootAICharacter.generated.h"
 
 class UBehaviorTree;
@@ -12,7 +12,7 @@ class UBehaviorTree;
  *
  */
 UCLASS()
-class SHOOT_API AShootAICharacter : public AShootCharacter
+class SHOOT_API AShootAICharacter : public AShootCharacterBase
 {
 	GENERATED_BODY()
 

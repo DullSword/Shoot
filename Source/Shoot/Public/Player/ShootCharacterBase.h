@@ -5,7 +5,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "ShootCharacter.generated.h"
+#include "ShootCharacterBase.generated.h"
 
 class UCharacterMovementComponent;
 class UHealthComponent;
@@ -14,13 +14,13 @@ class UAnimMontage;
 class UWeaponComponent;
 
 UCLASS()
-class SHOOT_API AShootCharacter : public ACharacter
+class SHOOT_API AShootCharacterBase : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
-	AShootCharacter(const FObjectInitializer& ObjectInitializer);
+	AShootCharacterBase(const FObjectInitializer& ObjectInitializer);
 
 protected:
 	// Called when the game starts or when spawned
@@ -30,21 +30,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 	UFUNCTION(BlueprintCallable)
 	float GetMovementDirection() const;
 
 	void SetPlayerColor(FLinearColor Color);
 
 protected:
-	void MoveForward(float Amount);
-	void MoveRight(float Amount);
-
-	void Sprint();
-	void StopSprint();
-
 	void OnHealthChange(float Health, float HealthDelta);
 	virtual void OnDead();
 
@@ -66,16 +57,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Material")
 	FName MaterialColorName = "Paint Color";
 
-private:
 	UPROPERTY()
 	UCharacterMovementComponent* CharacterMovementComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UHealthComponent* HealthComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UTextRenderComponent* HealthTextComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UWeaponComponent* WeaponComponent;
 };

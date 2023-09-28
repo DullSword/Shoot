@@ -1,18 +1,19 @@
 // Shoot Game. All Rights Reserved.
 
 #include "ShootGameModeBase.h"
-#include "Player/ShootCharacter.h"
+#include "Player/ShootPlayerCharacter.h"
 #include "Player/ShootPlayerController.h"
 #include "UI/ShootHUD.h"
 #include "AIController.h"
 #include "ShootCoreTypes.h"
+#include "Player/ShootCharacterBase.h"
 #include "ShootPlayerState.h"
 #include "Components/RespawnComponent.h"
 #include "EngineUtils.h"
 
 AShootGameModeBase::AShootGameModeBase()
 {
-	DefaultPawnClass = AShootCharacter::StaticClass();
+	DefaultPawnClass = AShootPlayerCharacter::StaticClass();
 	PlayerControllerClass = AShootPlayerController::StaticClass();
 	HUDClass = AShootHUD::StaticClass();
 	PlayerStateClass = AShootPlayerState::StaticClass();
@@ -36,12 +37,9 @@ void AShootGameModeBase::SpawnBots()
 		return;
 	}
 
-	FActorSpawnParameters SpawnParameters;
-	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
 	for (int32 i = 0; i < GameData.PlayersNum - 1; i++)
 	{
-		const auto AIController = GetWorld()->SpawnActor<AAIController>(AIControllerClass, SpawnParameters);
+		const auto AIController = GetWorld()->SpawnActor<AAIController>(AIControllerClass);
 		RestartPlayer(AIController);
 	}
 }
@@ -142,7 +140,7 @@ void AShootGameModeBase::SetPlayerColor(AController* Controller)
 		return;
 	}
 
-	const auto Character = Cast<AShootCharacter>(Controller->GetPawn());
+	const auto Character = Cast<AShootCharacterBase>(Controller->GetPawn());
 	if (!Character)
 	{
 		return;

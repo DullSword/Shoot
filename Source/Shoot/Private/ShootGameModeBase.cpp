@@ -258,3 +258,25 @@ void AShootGameModeBase::SetMatchState(EMatchState NewMatchState)
 
 	OnMatchStateChanged.Broadcast(NewMatchState);
 }
+
+bool AShootGameModeBase::SetPause(APlayerController* PC, FCanUnpause CanUnpauseDelegate)
+{
+	const auto Ret = Super::SetPause(PC, CanUnpauseDelegate);
+	if (Ret)
+	{
+		SetMatchState(EMatchState::MS_Pause);
+	}
+
+	return Ret;
+}
+
+bool AShootGameModeBase::ClearPause()
+{
+	const auto Ret = Super::ClearPause();
+	if (Ret)
+	{
+		SetMatchState(EMatchState::MS_InProcess);
+	}
+
+	return Ret;
+}

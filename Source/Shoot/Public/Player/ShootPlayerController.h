@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "ShootCoreTypes.h"
 #include "ShootPlayerController.generated.h"
 
 class URespawnComponent;
@@ -22,4 +23,11 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	URespawnComponent* RespawnComponent;
+
+	virtual void BeginPlay() override;
+	virtual void SetupInputComponent() override;
+
+private:
+	void OnPauseGame();
+	void OnMatchStateChanged(EMatchState NewState);
 };

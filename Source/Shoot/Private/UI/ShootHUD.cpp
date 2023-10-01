@@ -4,7 +4,6 @@
 #include "Engine/Canvas.h"
 #include "Blueprint/UserWidget.h"
 #include "ShootGameModeBase.h"
-#include "ShootCoreTypes.h"
 
 void AShootHUD::DrawHUD()
 {
@@ -17,10 +16,19 @@ void AShootHUD::BeginPlay()
 {
 	Super::BeginPlay();
 
-	const auto PlayerHUDWidget = CreateWidget<UUserWidget>(GetWorld(), PlayerHUDWidgetClass);
-	if (PlayerHUDWidget)
+	GameWidgets.Add(EMatchState::MS_InProcess, CreateWidget<UUserWidget>(GetWorld(), PlayerHUDWidgetClass));
+	GameWidgets.Add(EMatchState::MS_Pause, CreateWidget<UUserWidget>(GetWorld(), PauseWidgetClass));
+
+	for (const auto& GameWidgetPair : GameWidgets)
 	{
-		PlayerHUDWidget->AddToViewport();
+		const auto GameWidget = GameWidgetPair.Value;
+		if (!GameWidget)
+		{
+			continue;
+		}
+
+		GameWidget->AddToViewport();
+		GameWidget->SetVisibility(ESlateVisibility::Hidden);
 	}
 
 	if (const auto World = GetWorld(); World)
@@ -47,5 +55,20 @@ void AShootHUD::DrawCrossHair()
 
 void AShootHUD::OnMatchStateChanged(EMatchState NewMatchState)
 {
+	if (CurrentWidget)
+	{
+		CurrentWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
+
+	if (GameWidgets.Contains(NewMatchState))
+	{
+		CurrentWidget = GameWidgets[NewMatchState];
+	}
+
+	if (CurrentWidget)
+	{
+		CurrentWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+
 	UE_LOG(LogTemp, Warning, TEXT("NewMatchState: %s"), *UEnum::GetValueAsString(NewMatchState));
 }

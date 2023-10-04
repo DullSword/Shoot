@@ -18,6 +18,7 @@ void AShootHUD::BeginPlay()
 
 	GameWidgets.Add(EMatchState::MS_InProcess, CreateWidget<UUserWidget>(GetWorld(), PlayerHUDWidgetClass));
 	GameWidgets.Add(EMatchState::MS_Pause, CreateWidget<UUserWidget>(GetWorld(), PauseWidgetClass));
+	GameWidgets.Add(EMatchState::MS_GameOver, CreateWidget<UUserWidget>(GetWorld(), GameOverWidgetClass));
 
 	for (const auto& GameWidgetPair : GameWidgets)
 	{

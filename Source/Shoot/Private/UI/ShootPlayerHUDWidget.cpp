@@ -5,15 +5,15 @@
 #include "Components/WeaponComponent.h"
 #include "ShootUtils.h"
 
-bool UShootPlayerHUDWidget::Initialize()
+void UShootPlayerHUDWidget::NativeOnInitialized()
 {
+	Super::NativeOnInitialized();
+
 	if (const auto Controller = GetOwningPlayer(); Controller)
 	{
 		Controller->GetOnNewPawnNotifier().AddUObject(this, &UShootPlayerHUDWidget::OnNewPawn);
 	}
 	OnNewPawn(GetOwningPlayerPawn());
-
-	return Super::Initialize();
 }
 
 float UShootPlayerHUDWidget::GetHealthPercent() const

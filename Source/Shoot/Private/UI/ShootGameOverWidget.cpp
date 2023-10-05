@@ -6,9 +6,13 @@
 #include "UI/ShootPlayerStatRowWidget.h"
 #include "ShootPlayerState.h"
 #include "Components/VerticalBox.h"
+#include "Components/Button.h"
+#include "Kismet/GameplayStatics.h"
 
-bool UShootGameOverWidget::Initialize()
+void UShootGameOverWidget::NativeOnInitialized()
 {
+	Super::NativeOnInitialized();
+
 	if (GetWorld())
 	{
 		const auto GameMode = Cast<AShootGameModeBase>(GetWorld()->GetAuthGameMode());
@@ -18,7 +22,10 @@ bool UShootGameOverWidget::Initialize()
 		}
 	}
 
-	return Super::Initialize();
+	if (ResetLevelButton)
+	{
+		ResetLevelButton->OnClicked.AddDynamic(this, &UShootGameOverWidget::OnResetLevel);
+	}
 }
 
 void UShootGameOverWidget::OnMatchStateChanged(EMatchState NewState)
@@ -64,4 +71,10 @@ void UShootGameOverWidget::UpdatePlayersStat()
 
 		PlayerStatBox->AddChild(PlayerStatRowWidget);
 	}
+}
+
+void UShootGameOverWidget::OnResetLevel()
+{
+	auto CurrentLevelName = UGameplayStatics::GetCurrentLevelName(this);
+	UGameplayStatics::OpenLevel(this, FName(CurrentLevelName));
 }

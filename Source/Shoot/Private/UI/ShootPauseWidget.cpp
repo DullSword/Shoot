@@ -4,16 +4,14 @@
 #include "Components/Button.h"
 #include "ShootGameModeBase.h"
 
-bool UShootPauseWidget::Initialize()
+void UShootPauseWidget::NativeOnInitialized()
 {
-	const bool InitStatus = Super::Initialize();
+	Super::NativeOnInitialized();
 
 	if (ClearPauseButton)
 	{
 		ClearPauseButton->OnClicked.AddDynamic(this, &UShootPauseWidget::ClearPause);
 	}
-
-	return InitStatus;
 }
 
 void UShootPauseWidget::ClearPause()

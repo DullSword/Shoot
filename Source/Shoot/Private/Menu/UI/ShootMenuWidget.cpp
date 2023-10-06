@@ -3,6 +3,7 @@
 #include "Menu/UI/ShootMenuWidget.h"
 #include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"
+#include "ShootGameInstance.h"
 
 void UShootMenuWidget::NativeOnInitialized()
 {
@@ -16,6 +17,22 @@ void UShootMenuWidget::NativeOnInitialized()
 
 void UShootMenuWidget::OnStartGame()
 {
-	const FName StartupLevelName = TEXT("TestLevel");
-	UGameplayStatics::OpenLevel(this, StartupLevelName);
+	if (!GetWorld())
+	{
+		return;
+	}
+
+	const auto GameInstance = GetWorld()->GetGameInstance<UShootGameInstance>();
+	if (!GameInstance)
+	{
+		return;
+	}
+
+	if (GameInstance->GetStartupLevelName().IsNone())
+	{
+		UE_LOG(LogTemp, Error, TEXT("Level name is NONE"));
+		return;
+	}
+
+	UGameplayStatics::OpenLevel(this, GameInstance->GetStartupLevelName());
 }

@@ -16,8 +16,12 @@ class SHOOT_API UShootGameInstance : public UGameInstance
 
 public:
 	FName GetStartupLevelName() { return StartupLevelName; }
+	FName GetMenuLevelName() { return MenuLevelName; }
 
 protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Game")
+	FName MenuLevelName = NAME_None;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Game")
 	FName StartupLevelName = NAME_None;
 };

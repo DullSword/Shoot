@@ -51,8 +51,8 @@ DECLARE_MULTICAST_DELEGATE(FOnClipEmptySignature)
 DECLARE_MULTICAST_DELEGATE(FOnDeadSignature)
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHealthChangeSignature, float, float)
 
-	// VFX
-	USTRUCT(BlueprintType)
+// VFX
+USTRUCT(BlueprintType)
 struct FDecalData
 {
 	GENERATED_BODY()
@@ -119,3 +119,20 @@ enum class EMatchState : uint8
 };
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnMatchStateChangedSignature, EMatchState)
+
+USTRUCT(BlueprintType)
+struct FLevelData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game", meta = (Tooltip = "LevelName must be unique!"))
+	FName LevelName = NAME_None;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game")
+	FName LevelDisplayName = NAME_None;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game")
+	UTexture2D* LevelThumbnail;
+};
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnLevelSelectedSignature, const FLevelData&)

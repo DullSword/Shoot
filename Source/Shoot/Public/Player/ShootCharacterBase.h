@@ -36,7 +36,7 @@ public:
 	void SetPlayerColor(FLinearColor Color);
 
 protected:
-	void OnHealthChange(float Health, float HealthDelta);
+	virtual void OnHealthChange(float Health, float HealthDelta);
 	virtual void OnDead();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Dead")

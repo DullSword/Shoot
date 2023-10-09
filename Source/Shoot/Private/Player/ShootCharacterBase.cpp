@@ -73,7 +73,7 @@ void AShootCharacterBase::SetPlayerColor(FLinearColor Color)
 
 void AShootCharacterBase::OnHealthChange(float Health, float HealthDelta)
 {
-	HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
+	//HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }
 
 void AShootCharacterBase::OnDead()

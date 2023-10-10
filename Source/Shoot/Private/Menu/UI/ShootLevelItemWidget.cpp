@@ -12,12 +12,30 @@ void UShootLevelItemWidget::NativeOnInitialized()
 	if (LevelSelectButton)
 	{
 		LevelSelectButton->OnClicked.AddDynamic(this, &UShootLevelItemWidget::OnLevelItemClicked);
+		LevelSelectButton->OnHovered.AddDynamic(this, &UShootLevelItemWidget::OnLevelItemHovered);
+		LevelSelectButton->OnUnhovered.AddDynamic(this, &UShootLevelItemWidget::OnLevelItemUnHovered);
 	}
 }
 
 void UShootLevelItemWidget::OnLevelItemClicked()
 {
 	OnLevelSelected.Broadcast(LevelData);
+}
+
+void UShootLevelItemWidget::OnLevelItemHovered()
+{
+	if (FrameImage)
+	{
+		FrameImage->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void UShootLevelItemWidget::OnLevelItemUnHovered()
+{
+	if (FrameImage)
+	{
+		FrameImage->SetVisibility(ESlateVisibility::Hidden);
+	}
 }
 
 void UShootLevelItemWidget::SetLevelData(const FLevelData& Data)
@@ -37,8 +55,8 @@ void UShootLevelItemWidget::SetLevelData(const FLevelData& Data)
 
 void UShootLevelItemWidget::SetSelected(bool bIsSelected)
 {
-	if (FrameImage)
+	if (LevelThumb)
 	{
-		FrameImage->SetVisibility(bIsSelected ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+		LevelThumb->SetColorAndOpacity(bIsSelected ? FLinearColor::White : FLinearColor(.1f, .1f, .1f));
 	}
 }

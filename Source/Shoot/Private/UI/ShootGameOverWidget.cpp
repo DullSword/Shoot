@@ -68,6 +68,7 @@ void UShootGameOverWidget::UpdatePlayersStat()
 		PlayerStatRowWidget->SetDeaths(FText::FromString(FString::FromInt(PlayerState->GetDeathsNum())));
 		PlayerStatRowWidget->SetTeam(FText::FromString(FString::FromInt(PlayerState->GetTeamID())));
 		PlayerStatRowWidget->SetPlayerIndicatorVisibility(Controller->IsPlayerController());
+		PlayerStatRowWidget->SetTeamColor(PlayerState->GetTeamColor());
 
 		PlayerStatBox->AddChild(PlayerStatRowWidget);
 	}

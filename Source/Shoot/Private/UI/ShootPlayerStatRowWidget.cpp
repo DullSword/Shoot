@@ -51,3 +51,12 @@ void UShootPlayerStatRowWidget::SetPlayerIndicatorVisibility(bool Visible)
 	}
 	PlayerIndicatorImage->SetVisibility(Visible ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
 }
+
+void UShootPlayerStatRowWidget::SetTeamColor(FLinearColor Color)
+{
+	if (!TeamImage)
+	{
+		return;
+	}
+	TeamImage->SetColorAndOpacity(Color);
+}

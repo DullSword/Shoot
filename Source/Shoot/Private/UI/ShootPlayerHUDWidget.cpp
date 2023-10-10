@@ -4,6 +4,7 @@
 #include "components/HealthComponent.h"
 #include "Components/WeaponComponent.h"
 #include "ShootUtils.h"
+#include "Components/ProgressBar.h"
 
 void UShootPlayerHUDWidget::NativeOnInitialized()
 {
@@ -67,6 +68,8 @@ void UShootPlayerHUDWidget::OnHealthChanged(float Health, float HealthDelta)
 	{
 		OnTakeDamage();
 	}
+
+	UpdateHealthBar();
 }
 
 void UShootPlayerHUDWidget::OnNewPawn(APawn* NewPawn)
@@ -76,4 +79,30 @@ void UShootPlayerHUDWidget::OnNewPawn(APawn* NewPawn)
 	{
 		HealthComponent->OnHealthChange.AddUObject(this, &UShootPlayerHUDWidget::OnHealthChanged);
 	}
+
+	UpdateHealthBar();
+}
+
+void UShootPlayerHUDWidget::UpdateHealthBar()
+{
+	if (HealthProgressBar)
+	{
+		HealthProgressBar->SetFillColorAndOpacity(GetHealthPercent() < PercentColorThreshold ? BadColor : GoodColor);
+	}
+}
+
+FString UShootPlayerHUDWidget::FormatBullets(int32 BulletsNum) const
+{
+	const int32 MaxLen = 3;
+	const TCHAR PrefixSymbol = '0';
+
+	auto BulletStr = FString::FromInt(BulletsNum);
+	const auto SymbolsNum = MaxLen - BulletStr.Len();
+
+	if (SymbolsNum > 0)
+	{
+		BulletStr = FString::ChrN(SymbolsNum, PrefixSymbol).Append(BulletStr);
+	}
+
+	return BulletStr;
 }

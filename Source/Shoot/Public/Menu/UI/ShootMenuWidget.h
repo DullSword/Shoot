@@ -18,6 +18,9 @@ class SHOOT_API UShootMenuWidget : public UUserWidget
 	GENERATED_BODY()
 
 protected:
+	UPROPERTY(BlueprintReadOnly, Transient, meta = (BindWidgetAnim))
+	UWidgetAnimation* EnterAnimation;
+
 	UPROPERTY(meta = (BindWidget))
 	UButton* StartGameButton;
 

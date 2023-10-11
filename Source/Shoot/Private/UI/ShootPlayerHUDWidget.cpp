@@ -66,7 +66,12 @@ void UShootPlayerHUDWidget::OnHealthChanged(float Health, float HealthDelta)
 {
 	if (HealthDelta < 0.f)
 	{
-		OnTakeDamage();
+		//OnTakeDamage();
+
+		if (!IsAnimationPlaying(DamagedAnimation))
+		{
+			PlayAnimation(DamagedAnimation);
+		}
 	}
 
 	UpdateHealthBar();

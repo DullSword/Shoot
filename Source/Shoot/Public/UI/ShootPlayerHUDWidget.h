@@ -33,13 +33,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool IsPlayerSpectating() const;
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "UI")
-	void OnTakeDamage();
+	//UFUNCTION(BlueprintImplementableEvent, Category = "UI")
+	//void OnTakeDamage();
 
 	UFUNCTION(BlueprintCallable, Category = "UI")
 	FString FormatBullets(int32 BulletsNum) const;
 
 protected:
+	UPROPERTY(BlueprintReadOnly, Transient, meta = (BindWidgetAnim))
+	UWidgetAnimation* DamagedAnimation;
+
 	UPROPERTY(meta = (BindWidget))
 	UProgressBar* HealthProgressBar;
 

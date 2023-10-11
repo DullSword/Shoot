@@ -23,6 +23,11 @@ void UShootMenuWidget::NativeOnInitialized()
 	}
 
 	InitLevelItems();
+
+	if (!IsAnimationPlaying(EnterAnimation))
+	{
+		PlayAnimation(EnterAnimation);
+	}
 }
 
 void UShootMenuWidget::InitLevelItems()

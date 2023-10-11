@@ -28,6 +28,12 @@ void UShootMenuWidget::NativeOnInitialized()
 	{
 		PlayAnimation(EnterAnimation);
 	}
+
+	if (OutAnimation)
+	{
+		OutAnimationDynamicEvent.BindDynamic(this, &UShootMenuWidget::OnOutAnimationFinished);
+		BindToAnimationFinished(OutAnimation, OutAnimationDynamicEvent);
+	}
 }
 
 void UShootMenuWidget::InitLevelItems()
@@ -101,13 +107,7 @@ void UShootMenuWidget::OnLevelSelected(const FLevelData& Data)
 
 void UShootMenuWidget::OnStartGame()
 {
-	const auto GameInstance = GetShootGameInstance();
-	if (!GameInstance)
-	{
-		return;
-	}
-
-	UGameplayStatics::OpenLevel(this, GameInstance->GetStartupLevel().LevelName);
+	PlayAnimation(OutAnimation);
 }
 
 void UShootMenuWidget::OnQuitGame()
@@ -123,4 +123,15 @@ UShootGameInstance* UShootMenuWidget::GetShootGameInstance() const
 	}
 
 	return GetWorld()->GetGameInstance<UShootGameInstance>();
+}
+
+void UShootMenuWidget::OnOutAnimationFinished()
+{
+	const auto GameInstance = GetShootGameInstance();
+	if (!GameInstance)
+	{
+		return;
+	}
+
+	UGameplayStatics::OpenLevel(this, GameInstance->GetStartupLevel().LevelName);
 }

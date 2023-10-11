@@ -21,6 +21,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Transient, meta = (BindWidgetAnim))
 	UWidgetAnimation* EnterAnimation;
 
+	UPROPERTY(BlueprintReadOnly, Transient, meta = (BindWidgetAnim))
+	UWidgetAnimation* OutAnimation;
+
 	UPROPERTY(meta = (BindWidget))
 	UButton* StartGameButton;
 
@@ -48,4 +51,9 @@ private:
 	void InitLevelItems();
 	void OnLevelSelected(const FLevelData& Data);
 	UShootGameInstance* GetShootGameInstance() const;
+
+	FWidgetAnimationDynamicEvent OutAnimationDynamicEvent;
+
+	UFUNCTION()
+	void OnOutAnimationFinished();
 };

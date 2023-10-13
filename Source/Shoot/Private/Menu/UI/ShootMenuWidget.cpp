@@ -7,6 +7,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Menu/UI/ShootLevelItemWidget.h"
 #include "Components/HorizontalBox.h"
+#include "Sound/SoundCue.h"
 
 void UShootMenuWidget::NativeOnInitialized()
 {
@@ -23,17 +24,6 @@ void UShootMenuWidget::NativeOnInitialized()
 	}
 
 	InitLevelItems();
-
-	if (!IsAnimationPlaying(EnterAnimation))
-	{
-		PlayAnimation(EnterAnimation);
-	}
-
-	if (OutAnimation)
-	{
-		OutAnimationDynamicEvent.BindDynamic(this, &UShootMenuWidget::OnOutAnimationFinished);
-		BindToAnimationFinished(OutAnimation, OutAnimationDynamicEvent);
-	}
 }
 
 void UShootMenuWidget::InitLevelItems()
@@ -107,7 +97,8 @@ void UShootMenuWidget::OnLevelSelected(const FLevelData& Data)
 
 void UShootMenuWidget::OnStartGame()
 {
-	PlayAnimation(OutAnimation);
+	Out();
+	UGameplayStatics::PlaySound2D(this, StartGameSound);
 }
 
 void UShootMenuWidget::OnQuitGame()

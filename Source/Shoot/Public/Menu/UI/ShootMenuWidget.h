@@ -3,27 +3,22 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "UI/ShootWidgetBase.h"
 #include "ShootMenuWidget.generated.h"
 
 class UButton;
 class UHorizontalBox;
+class USoundCue;
 
 /**
  *
  */
 UCLASS()
-class SHOOT_API UShootMenuWidget : public UUserWidget
+class SHOOT_API UShootMenuWidget : public UShootWidgetBase
 {
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY(BlueprintReadOnly, Transient, meta = (BindWidgetAnim))
-	UWidgetAnimation* EnterAnimation;
-
-	UPROPERTY(BlueprintReadOnly, Transient, meta = (BindWidgetAnim))
-	UWidgetAnimation* OutAnimation;
-
 	UPROPERTY(meta = (BindWidget))
 	UButton* StartGameButton;
 
@@ -35,6 +30,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUserWidget> LevelItemWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	USoundCue* StartGameSound;
 
 	virtual void NativeOnInitialized() override;
 
@@ -52,8 +50,5 @@ private:
 	void OnLevelSelected(const FLevelData& Data);
 	UShootGameInstance* GetShootGameInstance() const;
 
-	FWidgetAnimationDynamicEvent OutAnimationDynamicEvent;
-
-	UFUNCTION()
-	void OnOutAnimationFinished();
+	virtual void OnOutAnimationFinished() override;
 };

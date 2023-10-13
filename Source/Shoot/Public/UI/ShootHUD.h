@@ -7,6 +7,8 @@
 #include "ShootCoreTypes.h"
 #include "ShootHUD.generated.h"
 
+class UShootWidgetBase;
+
 /**
  *
  */
@@ -34,10 +36,10 @@ private:
 	void DrawCrossHair();
 
 	UPROPERTY()
-	TMap<EMatchState, UUserWidget*> GameWidgets;
+	TMap<EMatchState, UShootWidgetBase*> GameWidgets;
 
 	UPROPERTY()
-	UUserWidget* CurrentWidget = nullptr;
+	UShootWidgetBase* CurrentWidget = nullptr;
 
 	void OnMatchStateChanged(EMatchState NewMatchState);
 };

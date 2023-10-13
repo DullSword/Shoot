@@ -2,7 +2,7 @@
 
 #include "UI/ShootHUD.h"
 #include "Engine/Canvas.h"
-#include "Blueprint/UserWidget.h"
+#include "UI/ShootWidgetBase.h"
 #include "ShootGameModeBase.h"
 
 void AShootHUD::DrawHUD()
@@ -16,9 +16,9 @@ void AShootHUD::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GameWidgets.Add(EMatchState::MS_InProcess, CreateWidget<UUserWidget>(GetWorld(), PlayerHUDWidgetClass));
-	GameWidgets.Add(EMatchState::MS_Pause, CreateWidget<UUserWidget>(GetWorld(), PauseWidgetClass));
-	GameWidgets.Add(EMatchState::MS_GameOver, CreateWidget<UUserWidget>(GetWorld(), GameOverWidgetClass));
+	GameWidgets.Add(EMatchState::MS_InProcess, CreateWidget<UShootWidgetBase>(GetWorld(), PlayerHUDWidgetClass));
+	GameWidgets.Add(EMatchState::MS_Pause, CreateWidget<UShootWidgetBase>(GetWorld(), PauseWidgetClass));
+	GameWidgets.Add(EMatchState::MS_GameOver, CreateWidget<UShootWidgetBase>(GetWorld(), GameOverWidgetClass));
 
 	for (const auto& GameWidgetPair : GameWidgets)
 	{
@@ -69,6 +69,7 @@ void AShootHUD::OnMatchStateChanged(EMatchState NewMatchState)
 	if (CurrentWidget)
 	{
 		CurrentWidget->SetVisibility(ESlateVisibility::Visible);
+		CurrentWidget->Enter();
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("NewMatchState: %s"), *UEnum::GetValueAsString(NewMatchState));

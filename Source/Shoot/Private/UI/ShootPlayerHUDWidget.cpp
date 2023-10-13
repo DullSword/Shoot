@@ -86,6 +86,8 @@ void UShootPlayerHUDWidget::OnNewPawn(APawn* NewPawn)
 	}
 
 	UpdateHealthBar();
+
+	Enter();
 }
 
 void UShootPlayerHUDWidget::UpdateHealthBar()

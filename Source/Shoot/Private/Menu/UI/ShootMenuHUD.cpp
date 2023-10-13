@@ -1,7 +1,6 @@
 // Shoot Game. All Rights Reserved.
 
 #include "Menu/UI/ShootMenuHUD.h"
-#include "Blueprint/UserWidget.h"
 #include "Menu/UI/ShootMenuWidget.h"
 
 void AShootMenuHUD::BeginPlay()
@@ -15,4 +14,5 @@ void AShootMenuHUD::BeginPlay()
 	}
 
 	MenuWidget->AddToViewport();
+	MenuWidget->Enter();
 }

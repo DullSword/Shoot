@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "UI/ShootWidgetBase.h"
 #include "ShootGameOverWidget.generated.h"
 
 class UVerticalBox;
@@ -13,7 +13,7 @@ class UButton;
  *
  */
 UCLASS()
-class SHOOT_API UShootGameOverWidget : public UUserWidget
+class SHOOT_API UShootGameOverWidget : public UShootWidgetBase
 {
 	GENERATED_BODY()
 

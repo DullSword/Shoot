@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "UI/ShootWidgetBase.h"
 #include "ShootCoreTypes.h"
 #include "ShootPlayerHUDWidget.generated.h"
 
@@ -13,7 +13,7 @@ class UProgressBar;
  *
  */
 UCLASS()
-class SHOOT_API UShootPlayerHUDWidget : public UUserWidget
+class SHOOT_API UShootPlayerHUDWidget : public UShootWidgetBase
 {
 	GENERATED_BODY()
 

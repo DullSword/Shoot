@@ -2,6 +2,8 @@
 
 #include "Weapon/LauncherWeapon.h"
 #include "Weapon/ShootProjectile.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 void ALauncherWeapon::StartFire()
 {
@@ -26,8 +28,14 @@ void ALauncherWeapon::MakeShoot()
 			false);
 	}
 
-	if (IsTotalAmmoEmpty() || !GetWorld())
+	if (!GetWorld())
 	{
+		return;
+	}
+
+	if (IsTotalAmmoEmpty())
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, NoAmmoSound, GetActorLocation());
 		return;
 	}
 
@@ -42,13 +50,15 @@ void ALauncherWeapon::MakeShoot()
 	// Muzzle VFX
 	SpawnMuzzleVFX();
 
+	UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetMuzzleTransform().GetLocation());
+
 	FHitResult HitResult;
 	MakeHit(HitResult, TraceStart, TraceEnd);
 
 	const FVector EndPoint = HitResult.bBlockingHit ? HitResult.ImpactPoint : TraceEnd;
 	const FVector Direction = (EndPoint - GetMuzzleTransform().GetLocation()).GetSafeNormal();
 
-	const FTransform  SpawnTransform{ GetMuzzleTransform() };
+	const FTransform SpawnTransform{ GetMuzzleTransform() };
 	AShootProjectile* Projectile = GetWorld()->SpawnActorDeferred<AShootProjectile>(ProjectileClass, SpawnTransform);
 
 	if (Projectile)

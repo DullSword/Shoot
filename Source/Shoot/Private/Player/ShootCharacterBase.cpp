@@ -6,6 +6,8 @@
 #include "Components/TextRenderComponent.h"
 #include "Components/WeaponComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AShootCharacterBase::AShootCharacterBase(const FObjectInitializer& ObjectInitializer)
@@ -96,6 +98,8 @@ void AShootCharacterBase::OnDead()
 	// Ragdoll
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::Type::PhysicsOnly);
 	GetMesh()->SetSimulatePhysics(true);
+
+	UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation());
 }
 
 void AShootCharacterBase::TakeFallingDamage(const FHitResult& Hit)

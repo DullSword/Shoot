@@ -12,6 +12,7 @@ class UHealthComponent;
 class UTextRenderComponent;
 class UAnimMontage;
 class UWeaponComponent;
+class USoundCue;
 
 UCLASS()
 class SHOOT_API AShootCharacterBase : public ACharacter
@@ -68,4 +69,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UWeaponComponent* WeaponComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+	USoundCue* DeathSound;
 };

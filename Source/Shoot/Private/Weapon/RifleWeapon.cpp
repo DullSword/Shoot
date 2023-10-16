@@ -5,6 +5,9 @@
 #include "Weapon/Components/ShootWeaponVFXComponent.h"
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
+#include "Components/AudioComponent.h"
 
 ARifleWeapon::ARifleWeapon()
 {
@@ -22,7 +25,7 @@ void ARifleWeapon::StartFire()
 {
 	Super::StartFire();
 
-	InitMuzzleVFX();
+	InitFX();
 
 	GetWorldTimerManager().SetTimer(ShootTimer, this, &ARifleWeapon::MakeShoot, TimeBetweenShoots, true);
 	MakeShoot();
@@ -34,7 +37,7 @@ void ARifleWeapon::StopFire()
 
 	GetWorldTimerManager().ClearTimer(ShootTimer);
 
-	SetMuzzleVFXVisibility(false);
+	SetFXActive(false);
 }
 
 void ARifleWeapon::MakeShoot()
@@ -43,6 +46,7 @@ void ARifleWeapon::MakeShoot()
 
 	if (IsTotalAmmoEmpty())
 	{
+		UGameplayStatics::PlaySoundAtLocation(this, NoAmmoSound, GetActorLocation());
 		StopFire();
 		return;
 	}
@@ -72,7 +76,7 @@ void ARifleWeapon::MakeShoot()
 		TraceVFXEnd = HitResult.ImpactPoint;
 		WeaponVFXComponent->PlayImpactFX(HitResult);
 
-		//UE_LOG(LogTemp, Warning, TEXT("Bone name: %s"), *HitResult.BoneName.ToString());
+		// UE_LOG(LogTemp, Warning, TEXT("Bone name: %s"), *HitResult.BoneName.ToString());
 	}
 
 	SpawnTraceVFX(GetMuzzleTransform().GetLocation(), TraceVFXEnd);
@@ -80,7 +84,7 @@ void ARifleWeapon::MakeShoot()
 
 bool ARifleWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const
 {
-	FVector	 ViewLocation;
+	FVector ViewLocation;
 	FRotator ViewRotation;
 	if (!GetPlayerViewPoint(ViewLocation, ViewRotation))
 	{
@@ -88,7 +92,7 @@ bool ARifleWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const
 	}
 
 	TraceStart = ViewLocation;
-	float		  ConeHalfAngleRad = FMath::DegreesToRadians(BulletSpread);
+	float ConeHalfAngleRad = FMath::DegreesToRadians(BulletSpread);
 	const FVector ShootDirection = FMath::VRandCone(ViewRotation.Vector(), ConeHalfAngleRad);
 	TraceEnd = TraceStart + ShootDirection * TraceMaxDistance;
 	return true;
@@ -104,23 +108,35 @@ void ARifleWeapon::MakeDamage(FHitResult& HitResult)
 	DamagedActor->TakeDamage(DamageAmount, FDamageEvent{}, GetController(), this);
 }
 
-void ARifleWeapon::InitMuzzleVFX()
+void ARifleWeapon::InitFX()
 {
 	if (!MuzzleNiagaraComponent)
 	{
 		MuzzleNiagaraComponent = SpawnMuzzleVFX();
 	}
-	SetMuzzleVFXVisibility(true);
+
+	if (!FireAudioComponent)
+	{
+		FireAudioComponent = UGameplayStatics::SpawnSoundAttached(FireSound, WeaponMesh, MuzzleSocketName);
+	}
+	SetFXActive(true);
 }
 
-void ARifleWeapon::SetMuzzleVFXVisibility(bool Visible)
+void ARifleWeapon::SetFXActive(bool bIsActive)
 {
 	if (!MuzzleNiagaraComponent)
 	{
 		return;
 	}
 
-	MuzzleNiagaraComponent->SetVisibility(Visible);
+	MuzzleNiagaraComponent->SetVisibility(bIsActive);
+
+	if (!FireAudioComponent)
+	{
+		return;
+	}
+
+	FireAudioComponent->SetPaused(!bIsActive);
 }
 
 void ARifleWeapon::SpawnTraceVFX(const FVector& TraceStart, const FVector& TraceEnd)

@@ -8,6 +8,7 @@
 #include "ShootWeapon.generated.h"
 
 class UNiagaraComponent;
+class USoundCue;
 
 UCLASS()
 class SHOOT_API AShootWeapon : public AActor
@@ -28,14 +29,17 @@ public:
 	bool TryToAddAmmo(int32 BulletAmount);
 
 	FWeaponUIData GetUIData() const { return UIData; }
-	FAmmoData	  GetAmmoData() const { return CurrentAmmo; }
-	float		  GetTraceMaxDistance() const { return TraceMaxDistance; }
+	FAmmoData GetAmmoData() const { return CurrentAmmo; }
+	float GetTraceMaxDistance() const { return TraceMaxDistance; }
 
 	FOnClipEmptySignature OnClipEmpty;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	USkeletalMeshComponent* WeaponMesh;
 
 	UPROPERTY(EditAnywhere)
 	FName MuzzleSocketName = "MuzzleSocket";
@@ -72,9 +76,12 @@ protected:
 
 	UNiagaraComponent* SpawnMuzzleVFX();
 
-private:
-	UPROPERTY(VisibleAnywhere, Category = "Components")
-	USkeletalMeshComponent* WeaponMesh;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+	USoundCue* FireSound;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+	USoundCue* NoAmmoSound;
+
+private:
 	FAmmoData CurrentAmmo;
 };

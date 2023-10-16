@@ -54,9 +54,13 @@ private:
 	UShootWeaponVFXComponent* WeaponVFXComponent;
 
 	// MuzzleVFX
+	UPROPERTY()
 	UNiagaraComponent* MuzzleNiagaraComponent;
 
-	void InitMuzzleVFX();
-	void SetMuzzleVFXVisibility(bool Visible);
+	UPROPERTY()
+	UAudioComponent* FireAudioComponent;
+
+	void InitFX();
+	void SetFXActive(bool bIsActive);
 	void SpawnTraceVFX(const FVector& TraceStart, const FVector& TraceEnd);
 };

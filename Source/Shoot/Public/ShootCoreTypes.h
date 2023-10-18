@@ -4,6 +4,7 @@
 
 class AShootWeapon;
 class UNiagaraSystem;
+class USoundCue;
 
 // weapon
 USTRUCT(BlueprintType)
@@ -80,8 +81,12 @@ struct FImpactData
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
 	FDecalData DecalData;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Sound")
+	USoundCue* Sound;
 };
 
+// game
 USTRUCT(BlueprintType)
 struct FGameData
 {

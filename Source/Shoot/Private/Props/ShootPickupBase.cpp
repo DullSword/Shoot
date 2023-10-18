@@ -2,6 +2,8 @@
 
 #include "Props/ShootPickupBase.h"
 #include "Components/SphereComponent.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AShootPickupBase::AShootPickupBase()
@@ -86,6 +88,7 @@ void AShootPickupBase::PickupWasTaken()
 	}
 
 	GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &AShootPickupBase::Respawn, RespawnTime);
+	UGameplayStatics::PlaySoundAtLocation(this, PickupTakenSound, GetActorLocation());
 }
 
 void AShootPickupBase::Respawn()

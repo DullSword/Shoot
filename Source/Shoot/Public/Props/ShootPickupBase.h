@@ -7,6 +7,7 @@
 #include "ShootPickupBase.generated.h"
 
 class USphereComponent;
+class USoundCue;
 
 UCLASS()
 class SHOOT_API AShootPickupBase : public AActor
@@ -25,6 +26,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Pickup")
 	float RespawnTime = 5.f;
+
+	UPROPERTY(EditAnywhere, Category = "Sound")
+	USoundCue* PickupTakenSound;
 
 public:
 	// Called every frame

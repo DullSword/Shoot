@@ -54,7 +54,7 @@ void AShootGameModeBase::StartRound()
 
 void AShootGameModeBase::GameTimerUpdate()
 {
-	UE_LOG(LogTemp, Display, TEXT("Time: %i / Round: %i/%i"), RoundCountDown, CurrentRound, GameData.RoundsNum);
+	//UE_LOG(LogTemp, Display, TEXT("Time: %i / Round: %i/%i"), RoundCountDown, CurrentRound, GameData.RoundsNum);
 
 	if (--RoundCountDown == 0)
 	{

@@ -30,4 +30,6 @@ protected:
 private:
 	void OnPauseGame();
 	void OnMatchStateChanged(EMatchState NewState);
+	
+	void OnMuteSound();
 };

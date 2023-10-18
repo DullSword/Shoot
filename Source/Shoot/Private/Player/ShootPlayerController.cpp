@@ -3,6 +3,7 @@
 #include "Player/ShootPlayerController.h"
 #include "Components/RespawnComponent.h"
 #include "ShootGameModeBase.h"
+#include "ShootGameInstance.h"
 
 AShootPlayerController::AShootPlayerController()
 {
@@ -36,6 +37,7 @@ void AShootPlayerController::SetupInputComponent()
 	}
 
 	InputComponent->BindAction("PauseGame", EInputEvent::IE_Pressed, this, &AShootPlayerController::OnPauseGame);
+	InputComponent->BindAction("Mute", EInputEvent::IE_Pressed, this, &AShootPlayerController::OnMuteSound);
 }
 
 void AShootPlayerController::OnPauseGame()
@@ -60,4 +62,20 @@ void AShootPlayerController::OnMatchStateChanged(EMatchState NewState)
 		SetInputMode(FInputModeUIOnly());
 		bShowMouseCursor = true;
 	}
+}
+
+void AShootPlayerController::OnMuteSound()
+{
+	if (!GetWorld())
+	{
+		return;
+	}
+
+	const auto GameInstance = GetWorld()->GetGameInstance<UShootGameInstance>();
+	if (!GameInstance)
+	{
+		return;
+	}
+
+	GameInstance->ToggleVolume();
 }

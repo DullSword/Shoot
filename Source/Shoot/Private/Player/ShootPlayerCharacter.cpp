@@ -83,6 +83,11 @@ void AShootPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 		PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Released, WeaponComponent, &UWeaponComponent::StopFire);
 		PlayerInputComponent->BindAction("NextWeapon", EInputEvent::IE_Pressed, WeaponComponent, &UWeaponComponent::NextWeapon);
 		PlayerInputComponent->BindAction("Reload", EInputEvent::IE_Pressed, WeaponComponent, &UWeaponComponent::Reload);
+
+		/*DECLARE_DELEGATE_OneParam(FZoomInputSignature, bool);
+		PlayerInputComponent->BindAction<FZoomInputSignature>("Zoom", IE_Pressed, WeaponComponent, &UWeaponComponent::Zoom, true);
+		PlayerInputComponent->BindAction<FZoomInputSignature>("Zoom", IE_Released, WeaponComponent, &UWeaponComponent::Zoom, false);*/
+		PlayerInputComponent->BindAction("Zoom", EInputEvent::IE_Pressed, WeaponComponent, &UWeaponComponent::Zoom);
 	}
 }
 

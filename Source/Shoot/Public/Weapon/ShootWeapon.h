@@ -32,6 +32,8 @@ public:
 	FAmmoData GetAmmoData() const { return CurrentAmmo; }
 	float GetTraceMaxDistance() const { return TraceMaxDistance; }
 
+	virtual void SetZoom(bool bEnabled){};
+
 	FOnClipEmptySignature OnClipEmpty;
 
 protected:

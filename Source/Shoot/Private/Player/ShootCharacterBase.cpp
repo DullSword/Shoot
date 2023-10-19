@@ -8,6 +8,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Sound/SoundCue.h"
 #include "Kismet/GameplayStatics.h"
+#include "Weapon/ShootWeapon.h"
 
 // Sets default values
 AShootCharacterBase::AShootCharacterBase(const FObjectInitializer& ObjectInitializer)
@@ -88,12 +89,8 @@ void AShootCharacterBase::OnDead()
 		CharacterCapsuleComponent->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
 	}
 
-	if (auto CharacterController = Cast<APlayerController>(Controller); CharacterController)
-	{
-		CharacterController->ChangeState(NAME_Spectating);
-	}
-
 	WeaponComponent->StopFire();
+	WeaponComponent->SetZoom(false);
 
 	// Ragdoll
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::Type::PhysicsOnly);

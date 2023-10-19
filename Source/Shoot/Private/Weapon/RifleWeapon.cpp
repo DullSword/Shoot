@@ -153,3 +153,20 @@ void ARifleWeapon::SpawnTraceVFX(const FVector& TraceStart, const FVector& Trace
 
 	TraceNiagaraComponent->SetNiagaraVariableVec3(TraceTargetName, TraceEnd);
 }
+
+void ARifleWeapon::SetZoom(bool bEnabled)
+{
+	const auto Controller = Cast<APlayerController>(GetController());
+
+	if (!Controller || !Controller->PlayerCameraManager)
+	{
+		return;
+	}
+
+	if (bEnabled)
+	{
+		DefaultCameraFOV = Controller->PlayerCameraManager->GetFOVAngle();
+	}
+
+	Controller->PlayerCameraManager->SetFOV(bEnabled ? FOVZoomAngle : DefaultCameraFOV);
+}

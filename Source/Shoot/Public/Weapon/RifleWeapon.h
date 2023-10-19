@@ -22,6 +22,8 @@ public:
 	virtual void StartFire() override;
 	virtual void StopFire() override;
 
+	virtual void SetZoom(bool bEnabled) override;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -45,6 +47,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "VFX")
 	FString TraceTargetName = "TraceTarget";
 
+	// FOV
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	float FOVZoomAngle = 50.f;
+
 private:
 	FTimerHandle ShootTimer;
 
@@ -63,4 +69,7 @@ private:
 	void InitFX();
 	void SetFXActive(bool bIsActive);
 	void SpawnTraceVFX(const FVector& TraceStart, const FVector& TraceEnd);
+
+	// FOV
+	float DefaultCameraFOV = 90.f;
 };

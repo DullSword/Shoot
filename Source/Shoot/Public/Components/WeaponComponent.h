@@ -30,6 +30,9 @@ public:
 
 	bool TryToAddAmmo(TSubclassOf<AShootWeapon> WeaponType, int32 BulletAmount);
 
+	void Zoom();
+	void SetZoom(bool bEnabled);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -54,6 +57,9 @@ protected:
 	TArray<AShootWeapon*> Weapons;
 
 	int32 CurrentWeaponIndex = 0;
+
+	// Zoom
+	bool bZoom = false;
 
 private:
 	UPROPERTY()

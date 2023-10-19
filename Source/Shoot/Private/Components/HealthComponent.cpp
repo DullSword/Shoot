@@ -1,8 +1,9 @@
 // Shoot Game. All Rights Reserved.
 
 #include "Components/HealthComponent.h"
-#include "GameFramework/Actor.h"
+#include "GameFramework/Character.h"
 #include "ShootGameModeBase.h"
+#include "PhysicalMaterials/PhysicalMaterial.h"
 
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
@@ -24,11 +25,31 @@ void UHealthComponent::BeginPlay()
 	AActor* ComponentOwner = GetOwner();
 	if (ComponentOwner)
 	{
-		ComponentOwner->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::OnTakeAnyDamage);
+		// ComponentOwner->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::OnTakeAnyDamage);
+		ComponentOwner->OnTakePointDamage.AddDynamic(this, &UHealthComponent::OnTakePointDamage);
+		ComponentOwner->OnTakeRadialDamage.AddDynamic(this, &UHealthComponent::OnTakeRadialDamage);
 	}
 }
 
 void UHealthComponent::OnTakeAnyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
+{
+	//UE_LOG(LogTemp, Display, TEXT("AnyDamage: %f"), Damage);
+}
+
+void UHealthComponent::OnTakePointDamage(AActor* DamagedActor, float Damage, AController* InstigatedBy, FVector HitLocation, UPrimitiveComponent* FHitComponent, FName BoneName, FVector ShotFromDirection, const UDamageType* DamageType, AActor* DamageCauser)
+{
+	const float FinalDamage = Damage * GetPointDamageModifier(DamagedActor, BoneName);
+	//UE_LOG(LogTemp, Display, TEXT("PointDamage: %f, FinalDamge: %f, BoneName: %s"), Damage, FinalDamage, *BoneName.ToString());
+	ApplyDamage(FinalDamage, InstigatedBy);
+}
+
+void UHealthComponent::OnTakeRadialDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, FVector Origin, FHitResult HitInfo, AController* InstigatedBy, AActor* DamageCauser)
+{
+	//UE_LOG(LogTemp, Display, TEXT("RadialDamage: %f"), Damage);
+	ApplyDamage(Damage, InstigatedBy);
+}
+
+void UHealthComponent::ApplyDamage(float Damage, AController* InstigatedBy)
 {
 	/*if (DamageType)
 	{
@@ -59,6 +80,23 @@ void UHealthComponent::OnTakeAnyDamage(AActor* DamagedActor, float Damage, const
 	}
 
 	StartCameraShake();
+}
+
+float UHealthComponent::GetPointDamageModifier(AActor* DamagedActor, const FName& BoneName)
+{
+	const auto Character = Cast<ACharacter>(DamagedActor);
+	if (!Character || !Character->GetMesh() || !Character->GetMesh()->GetBodyInstance(BoneName))
+	{
+		return 1.f;
+	}
+
+	const auto PhysicalMaterial = Character->GetMesh()->GetBodyInstance(BoneName)->GetSimplePhysicalMaterial();
+	if (!PhysicalMaterial || !DamageModifiers.Contains(PhysicalMaterial))
+	{
+		return 1.f;
+	}
+
+	return DamageModifiers[PhysicalMaterial];
 }
 
 void UHealthComponent::SetHealth(float NewHealth)

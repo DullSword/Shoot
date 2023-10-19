@@ -104,5 +104,5 @@ void AShootCharacterBase::TakeFallingDamage(const FHitResult& Hit)
 	const auto FallingVelocity = -GetVelocity().Z;
 	UE_LOG(LogTemp, Warning, TEXT("falling velocity :%f"), FallingVelocity);
 	const auto FallDamage = FMath::GetMappedRangeValueClamped(LandedDamageVelocity, LandedDamage, FallingVelocity);
-	TakeDamage(FallDamage, FDamageEvent{}, nullptr, nullptr);
+	TakeDamage(FallDamage, FPointDamageEvent{}, nullptr, nullptr);
 }

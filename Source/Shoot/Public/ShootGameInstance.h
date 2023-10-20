@@ -18,8 +18,8 @@ class SHOOT_API UShootGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
-	FLevelData GetStartupLevel() const { return StartupLevel; }
-	void SetStartupLevel(const FLevelData& Data) { StartupLevel = Data; };
+	FLevelData GetStartupLevelData() const { return StartupLevelData; }
+	void SetStartupLevelData(const FLevelData& Data) { StartupLevelData = Data; };
 
 	FName GetMenuLevelName() { return MenuLevelName; }
 
@@ -38,5 +38,5 @@ protected:
 	USoundClass* MasterSoundClass;
 
 private:
-	FLevelData StartupLevel;
+	FLevelData StartupLevelData;
 };

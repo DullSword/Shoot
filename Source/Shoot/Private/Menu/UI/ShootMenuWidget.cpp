@@ -63,13 +63,13 @@ void UShootMenuWidget::InitLevelItems()
 		LevelItemWidgets.Add(LevelItemWidget);
 	}
 
-	if (GameInstance->GetStartupLevel().LevelName.IsNone())
+	if (GameInstance->GetStartupLevelData().LevelName.IsNone())
 	{
 		OnLevelSelected(LevelsData[0]);
 	}
 	else
 	{
-		OnLevelSelected(GameInstance->GetStartupLevel());
+		OnLevelSelected(GameInstance->GetStartupLevelData());
 	}
 }
 
@@ -92,7 +92,7 @@ void UShootMenuWidget::OnLevelSelected(const FLevelData& Data)
 		return;
 	}
 
-	GameInstance->SetStartupLevel(Data);
+	GameInstance->SetStartupLevelData(Data);
 }
 
 void UShootMenuWidget::OnStartGame()
@@ -124,5 +124,5 @@ void UShootMenuWidget::OnOutAnimationFinished()
 		return;
 	}
 
-	UGameplayStatics::OpenLevel(this, GameInstance->GetStartupLevel().LevelName);
+	UGameplayStatics::OpenLevel(this, GameInstance->GetStartupLevelData().LevelName);
 }

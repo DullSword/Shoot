@@ -36,6 +36,8 @@ public:
 
 	void SetPlayerColor(FLinearColor Color);
 
+	virtual void TurnOff() override;
+
 protected:
 	virtual void OnHealthChange(float Health, float HealthDelta);
 	virtual void OnDead();

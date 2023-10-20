@@ -67,4 +67,6 @@ private:
 	EMatchState MatchState = EMatchState::MS_WaitingToStart;
 
 	void SetMatchState(EMatchState NewMatchState);
+
+	void StopAllFire();
 };

@@ -10,6 +10,7 @@
 #include "ShootPlayerState.h"
 #include "Components/RespawnComponent.h"
 #include "EngineUtils.h"
+#include "Components/WeaponComponent.h"
 
 AShootGameModeBase::AShootGameModeBase()
 {
@@ -54,7 +55,7 @@ void AShootGameModeBase::StartRound()
 
 void AShootGameModeBase::GameTimerUpdate()
 {
-	//UE_LOG(LogTemp, Display, TEXT("Time: %i / Round: %i/%i"), RoundCountDown, CurrentRound, GameData.RoundsNum);
+	// UE_LOG(LogTemp, Display, TEXT("Time: %i / Round: %i/%i"), RoundCountDown, CurrentRound, GameData.RoundsNum);
 
 	if (--RoundCountDown == 0)
 	{
@@ -89,7 +90,7 @@ void AShootGameModeBase::ResetOnePlayer(AController* Controller)
 {
 	if (Controller && Controller->GetPawn())
 	{
-		Controller->GetPawn()->Reset(); // 为了RestartPlayerAtPlayerStart能进入`else if (GetDefaultPawnClassForController(NewPlayer) != nullptr)`这个分支，重新生成Pawn
+		Controller->GetPawn()->Reset(); // 为了RestartPlayerAtPlayerStart中的判断条件`NewPlayer->GetPawn() != nullptr`不成立，进入`else if (GetDefaultPawnClassForController(NewPlayer) != nullptr)`这个分支，重新生成Pawn
 	}
 	RestartPlayer(Controller);
 	SetPlayerColor(Controller);
@@ -265,6 +266,7 @@ bool AShootGameModeBase::SetPause(APlayerController* PC, FCanUnpause CanUnpauseD
 	const auto Ret = Super::SetPause(PC, CanUnpauseDelegate);
 	if (Ret)
 	{
+		StopAllFire();
 		SetMatchState(EMatchState::MS_Pause);
 	}
 
@@ -280,4 +282,21 @@ bool AShootGameModeBase::ClearPause()
 	}
 
 	return Ret;
+}
+
+void AShootGameModeBase::StopAllFire()
+{
+	for (const auto Pawn : TActorRange<APawn>(GetWorld()))
+	{
+		if (!Pawn)
+		{
+			continue;
+		}
+		const auto WeaponComponent = Cast<UWeaponComponent>(Pawn->GetComponentByClass(UWeaponComponent::StaticClass()));
+		if (!WeaponComponent)
+		{
+			continue;
+		}
+		WeaponComponent->StopFire();
+	}
 }

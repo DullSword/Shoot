@@ -9,6 +9,8 @@
 #include "Sound/SoundCue.h"
 #include "Kismet/GameplayStatics.h"
 #include "Weapon/ShootWeapon.h"
+#include "AIController.h"
+#include "BrainComponent.h"
 
 // Sets default values
 AShootCharacterBase::AShootCharacterBase(const FObjectInitializer& ObjectInitializer)
@@ -35,6 +37,7 @@ void AShootCharacterBase::BeginPlay()
 	check(CharacterMovementComponent);
 	check(HealthTextComponent);
 	check(HealthComponent);
+	check(WeaponComponent);
 	check(GetMesh());
 
 	OnHealthChange(HealthComponent->GetHealth(), 0.f);
@@ -72,6 +75,24 @@ void AShootCharacterBase::SetPlayerColor(FLinearColor Color)
 	}
 
 	MaterialInst->SetVectorParameterValue(MaterialColorName, Color);
+}
+
+void AShootCharacterBase::TurnOff()
+{
+	WeaponComponent->StopFire();
+
+	if (const auto CharacterController = GetController(); !IsPlayerControlled() && CharacterController)
+	{
+		if (const auto AIController = Cast<AAIController>(CharacterController); AIController)
+		{
+			if (const auto BrainComponent = AIController->GetBrainComponent(); BrainComponent)
+			{
+				BrainComponent->Cleanup();
+			}
+		}
+	}
+
+	Super::TurnOff();
 }
 
 void AShootCharacterBase::OnHealthChange(float Health, float HealthDelta)

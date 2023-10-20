@@ -178,7 +178,7 @@ void UHealthComponent::Killed(AController* KillerController)
 
 void UHealthComponent::ReportDamageEvent(float Damage, AController* InstigatedBy)
 {
-	if (!InstigatedBy->GetPawn() || !GetOwner() || !InstigatedBy->GetPawn())
+	if (!GetOwner() || !InstigatedBy || !InstigatedBy->GetPawn())
 	{
 		return;
 	}

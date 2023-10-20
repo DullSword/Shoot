@@ -83,4 +83,6 @@ private:
 	void Heal();
 
 	void StartCameraShake();
+
+	void ReportDamageEvent(float Damage, AController* InstigatedBy);
 };

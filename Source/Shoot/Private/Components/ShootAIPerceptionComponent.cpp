@@ -5,6 +5,7 @@
 #include "AIController.h"
 #include "Components/HealthComponent.h"
 #include "ShootPlayerState.h"
+#include "Perception/AISense_Damage.h"
 
 AActor* UShootAIPerceptionComponent::GetClosestEnemy() const
 {
@@ -13,7 +14,11 @@ AActor* UShootAIPerceptionComponent::GetClosestEnemy() const
 
 	if (PerceivedActors.Num() == 0)
 	{
-		return nullptr;
+		GetCurrentlyPerceivedActors(UAISense_Damage::StaticClass(), PerceivedActors);
+		if (PerceivedActors.Num() == 0)
+		{
+			return nullptr;
+		}
 	}
 
 	const auto Controller = Cast<AAIController>(GetOwner());

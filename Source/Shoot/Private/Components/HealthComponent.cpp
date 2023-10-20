@@ -4,6 +4,7 @@
 #include "GameFramework/Character.h"
 #include "ShootGameModeBase.h"
 #include "PhysicalMaterials/PhysicalMaterial.h"
+#include "Perception/AISense_Damage.h"
 
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
@@ -33,19 +34,19 @@ void UHealthComponent::BeginPlay()
 
 void UHealthComponent::OnTakeAnyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
-	//UE_LOG(LogTemp, Display, TEXT("AnyDamage: %f"), Damage);
+	// UE_LOG(LogTemp, Display, TEXT("AnyDamage: %f"), Damage);
 }
 
 void UHealthComponent::OnTakePointDamage(AActor* DamagedActor, float Damage, AController* InstigatedBy, FVector HitLocation, UPrimitiveComponent* FHitComponent, FName BoneName, FVector ShotFromDirection, const UDamageType* DamageType, AActor* DamageCauser)
 {
 	const float FinalDamage = Damage * GetPointDamageModifier(DamagedActor, BoneName);
-	//UE_LOG(LogTemp, Display, TEXT("PointDamage: %f, FinalDamge: %f, BoneName: %s"), Damage, FinalDamage, *BoneName.ToString());
+	// UE_LOG(LogTemp, Display, TEXT("PointDamage: %f, FinalDamge: %f, BoneName: %s"), Damage, FinalDamage, *BoneName.ToString());
 	ApplyDamage(FinalDamage, InstigatedBy);
 }
 
 void UHealthComponent::OnTakeRadialDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, FVector Origin, FHitResult HitInfo, AController* InstigatedBy, AActor* DamageCauser)
 {
-	//UE_LOG(LogTemp, Display, TEXT("RadialDamage: %f"), Damage);
+	// UE_LOG(LogTemp, Display, TEXT("RadialDamage: %f"), Damage);
 	ApplyDamage(Damage, InstigatedBy);
 }
 
@@ -80,6 +81,8 @@ void UHealthComponent::ApplyDamage(float Damage, AController* InstigatedBy)
 	}
 
 	StartCameraShake();
+
+	ReportDamageEvent(Damage, InstigatedBy);
 }
 
 float UHealthComponent::GetPointDamageModifier(AActor* DamagedActor, const FName& BoneName)
@@ -171,4 +174,20 @@ void UHealthComponent::Killed(AController* KillerController)
 	}
 
 	GameMode->Killed(KillerController, Pawn->GetController());
+}
+
+void UHealthComponent::ReportDamageEvent(float Damage, AController* InstigatedBy)
+{
+	if (!InstigatedBy->GetPawn() || !GetOwner() || !InstigatedBy->GetPawn())
+	{
+		return;
+	}
+
+	UAISense_Damage::ReportDamageEvent(
+		this,
+		GetOwner(),
+		InstigatedBy->GetPawn(),
+		Damage,
+		InstigatedBy->GetPawn()->GetActorLocation(),
+		GetOwner()->GetActorLocation());
 }
